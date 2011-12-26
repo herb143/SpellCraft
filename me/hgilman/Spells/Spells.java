@@ -32,6 +32,7 @@ public class Spells extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 		spellCommandExecutor = new SpellCommandExecutor(this);
 		getCommand("spellinfo").setExecutor(spellCommandExecutor); // Set the executor.
+		getCommand("listspells").setExecutor(spellCommandExecutor); // Set the executor.
 		
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
