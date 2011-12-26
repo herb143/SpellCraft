@@ -61,7 +61,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 				// LISTSPELLS
 				else if(command.getName().equalsIgnoreCase("listspells"))
 				{
-					sender.sendMessage("Currently available spells (arrow denotes selection:");
+					sender.sendMessage("Currently available spells (arrow denotes selection):");
 
 					ArrayList<Spell> spellRegistry = plugin.playerBooks.get(player.getName()).getRegistry();
 
