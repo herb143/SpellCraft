@@ -84,17 +84,28 @@ public class Spell {
 
 	public String abilityFormat()
 	{
+		return abilityFormat(false);
+	}
+	
+	public String abilityFormat(boolean withParentheses)
+	{
 		String formattedName = "";
 		if(hasRequiredItems())
 		{
 			formattedName = formattedName + ChatColor.DARK_GREEN;
+			if(withParentheses) { formattedName = formattedName + "("; }
 			formattedName = formattedName + spellName;
+			if(withParentheses) { formattedName = formattedName + ")"; }
+			formattedName = formattedName + ChatColor.WHITE;
 			return formattedName;
 		}
 		else
 		{
 			formattedName = formattedName + ChatColor.DARK_RED;
+			if(withParentheses) { formattedName = formattedName + "("; }
 			formattedName = formattedName + spellName;
+			if(withParentheses) { formattedName = formattedName + ")"; }
+			formattedName = formattedName + ChatColor.WHITE;
 			return formattedName;
 		}
 	}

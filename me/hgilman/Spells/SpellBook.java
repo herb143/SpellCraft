@@ -44,4 +44,17 @@ public class SpellBook {
 
 		player.sendMessage("Selected spell: " + getCurrentSpell().abilityFormat()); // tell us what our current spell is now.
 	}
+	
+	public Spell getSpell(String spellName)
+	{
+		for(int iii=0;iii<spellRegistry.size();iii++)
+		{
+			if(spellRegistry.get(iii).getShortName().equalsIgnoreCase(spellName))
+			{
+				return spellRegistry.get(iii);
+			}
+		}
+		return null; // If we didn't find anything that matched.
+	}
+	
 }
