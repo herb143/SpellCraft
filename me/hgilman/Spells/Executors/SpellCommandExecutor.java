@@ -31,7 +31,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 					if(args.length==0)
 					{
 						Spell currentSpell = plugin.playerBooks.get(player.getName()).getCurrentSpell(); // Default to the current spell.
-						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true) + ": " + currentSpell.getDescription() + " Requires" + currentSpell.printRequiredItems());
+						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true) + ": " + currentSpell.getDescription());
 						return true;
 					}
 					else // They gave an arg.
@@ -39,7 +39,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 						if(plugin.playerBooks.get(player.getName()).getSpell(args[0]) != null)
 						{
 							Spell spell = plugin.playerBooks.get(player.getName()).getSpell(args[0]);
-							sender.sendMessage(spell.abilityFormat() + ": " + spell.getDescription() + " Requires" + spell.printRequiredItems());
+							sender.sendMessage(spell.abilityFormat() + ": " + spell.getDescription());
 							return true;
 						}
 						else
