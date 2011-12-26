@@ -27,8 +27,10 @@ public class SpellBook {
 		registerSpell(new NetSpell(plugin,player));
 	}
 	
-	ArrayList<Spell> spellRegistry = new ArrayList<Spell>();
+	private ArrayList<Spell> spellRegistry = new ArrayList<Spell>();
 	private int index = 0; // The current spell.
+	
+	public ArrayList<Spell> getRegistry() { return spellRegistry; }
 	
 	private void registerSpell(Spell spell)
 	{

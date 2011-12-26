@@ -33,7 +33,7 @@ public class Spell {
 		{
 			if(name.charAt(iii)!=' ') // If it's not a space.
 			{
-				shortName.concat(String.valueOf(name.charAt(iii)));
+				shortName = shortName.concat(String.valueOf(name.charAt(iii)));
 			}
 		}
 		
