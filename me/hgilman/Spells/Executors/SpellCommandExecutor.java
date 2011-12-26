@@ -57,7 +57,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 						return false;
 					}
 				}
-				
+
 				// LISTSPELLS
 				else if(command.getName().equalsIgnoreCase("listspells"))
 				{
@@ -80,6 +80,30 @@ public class SpellCommandExecutor implements CommandExecutor {
 					sender.sendMessage("Key: " + ChatColor.DARK_GREEN + "(proper resources)" + ChatColor.DARK_RED + " (needs materials)");
 					return true;
 				}
+
+				// SETSPELL
+				else if(command.getName().equalsIgnoreCase("setspell"))
+				{
+					if (args.length==1)
+					{
+						if(plugin.playerBooks.get(player.getName()).getSpell(args[0]) != null)
+						{
+							Spell spell = plugin.playerBooks.get(player.getName()).getSpell(args[0]);
+							plugin.playerBooks.get(player.getName()).setCurrentSpell(spell);
+							sender.sendMessage("Current spell set to " + spell.abilityFormat() + ".");
+							return true;
+						}
+						else
+						{
+							sender.sendMessage(ChatColor.DARK_RED + "Spell " + args[0] + " not found in your spellbook.");
+							return true;
+						}
+					}
+					else
+					{
+						return false;
+					}
+				}
 				else
 				{
 					plugin.log.info(this.toString() + " could not process the commmand: " + command.getName());
@@ -91,13 +115,6 @@ public class SpellCommandExecutor implements CommandExecutor {
 				sender.sendMessage(ChatColor.DARK_RED + "You must be wielding a Golden Scepter to use Spells.");
 				return true;
 			}
-
-			/*     
-
-	        else if(command.getName().equalsIgnoreCase("setspell"))
-	        {
-	        	//SETSPELL
-	        }*/
 		}
 		else
 		{

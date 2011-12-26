@@ -39,6 +39,11 @@ public class SpellBook {
 	
 	public Spell getCurrentSpell() { return spellRegistry.get(index); }
 	
+	public void setCurrentSpell(Spell spell)
+	{
+		index = spellRegistry.indexOf(spell);
+	}
+	
 	public void nextSpell() // Scrolls to the next spell and notifies the player.
 	{
 		if (index!=spellRegistry.size()-1) {index++;} // If we're not on the last one, advance.

@@ -10,3 +10,7 @@ commands:
       description: Lists the available spells.
       permission: Spells.listspells
       usage: /listspells
+   setspell:
+      description: Sets the current spell.
+      permission: Spells.setspell
+      usage: /setspell [spell]
