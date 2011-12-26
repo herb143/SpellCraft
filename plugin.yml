@@ -1,0 +1,8 @@
+name: Spells
+main: me.hgilman.Spells.Spells
+version: 2.0
+commands:
+   restart:
+      description: Restarts the server. For maintenance and testing.
+      permission: Spells.restart
+      usage: /restart
