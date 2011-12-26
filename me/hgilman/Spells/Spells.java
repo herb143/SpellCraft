@@ -12,12 +12,15 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
+import me.hgilman.Spells.Executors.SpellCommandExecutor;
 import net.minecraft.server.CraftingManager;
 import net.minecraft.server.ShapedRecipes;
 
 public class Spells extends JavaPlugin {
 	
 	public static HashMap<String, SpellBook> playerBooks = new HashMap<String, SpellBook>();
+	
+	private SpellCommandExecutor spellCommandExecutor;
 	
 	private final SpellsPlayerListener playerListener = new SpellsPlayerListener(this);
 	
@@ -27,7 +30,8 @@ public class Spells extends JavaPlugin {
 	{
 		log.info("Spells plugin loading...");
 		PluginManager pm = this.getServer().getPluginManager();
-	//	log.info("Max health for sheep: " + this.getServer().getWorlds().get(0).spawnCreature(new Location (this.getServer().getWorlds().get(0),0,0,0), CreatureType.SHEEP).getMaxHealth());
+		spellCommandExecutor = new SpellCommandExecutor(this);
+		getCommand("spellinfo").setExecutor(spellCommandExecutor); // Set the executor.
 		
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
