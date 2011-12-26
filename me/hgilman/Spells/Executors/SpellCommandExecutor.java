@@ -34,15 +34,15 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					if(args.length==0)
 					{
-						Spell currentSpell = plugin.playerBooks.get(player.getName()).getCurrentSpell(); // Default to the current spell.
+						Spell currentSpell = Spells.playerBooks.get(player.getName()).getCurrentSpell(); // Default to the current spell.
 						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true) + ": " + currentSpell.getDescription());
 						return true;
 					}
 					else if (args.length==1) // They gave an arg.
 					{
-						if(plugin.playerBooks.get(player.getName()).getSpell(args[0]) != null)
+						if(Spells.playerBooks.get(player.getName()).getSpell(args[0]) != null)
 						{
-							Spell spell = plugin.playerBooks.get(player.getName()).getSpell(args[0]);
+							Spell spell = Spells.playerBooks.get(player.getName()).getSpell(args[0]);
 							sender.sendMessage(spell.abilityFormat() + ": " + spell.getDescription());
 							return true;
 						}
@@ -63,11 +63,11 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					sender.sendMessage("Currently available spells (arrow denotes selection):");
 
-					ArrayList<Spell> spellRegistry = plugin.playerBooks.get(player.getName()).getRegistry();
+					ArrayList<Spell> spellRegistry = Spells.playerBooks.get(player.getName()).getRegistry();
 
 					for (int iii=0;iii<spellRegistry.size();iii++)
 					{
-						if (spellRegistry.get(iii) == plugin.playerBooks.get(player.getName()).getCurrentSpell())
+						if (spellRegistry.get(iii) == Spells.playerBooks.get(player.getName()).getCurrentSpell())
 						{
 							sender.sendMessage("   - " + spellRegistry.get(iii).abilityFormat() + " <--"); // It's the current spell.
 
@@ -86,10 +86,10 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					if (args.length==1)
 					{
-						if(plugin.playerBooks.get(player.getName()).getSpell(args[0]) != null)
+						if(Spells.playerBooks.get(player.getName()).getSpell(args[0]) != null)
 						{
-							Spell spell = plugin.playerBooks.get(player.getName()).getSpell(args[0]);
-							plugin.playerBooks.get(player.getName()).setCurrentSpell(spell);
+							Spell spell = Spells.playerBooks.get(player.getName()).getSpell(args[0]);
+							Spells.playerBooks.get(player.getName()).setCurrentSpell(spell);
 							sender.sendMessage("Current spell set to " + spell.abilityFormat() + ".");
 							return true;
 						}
