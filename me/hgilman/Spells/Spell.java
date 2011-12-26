@@ -257,14 +257,33 @@ public class Spell {
 		player.sendMessage("Sorry. The developers messed up. You should probably tell them about this error.");
 	}
 	
-	protected double getDistance(Location locA, Location locB) // Our lovely distance formula.
+	protected double getDistance(Location locA, Location locB)
 	{
+		return getDistance(locA,locB,false); // By default it is false
+	}
+	
+	protected double getDistance(Location locA, Location locB,boolean threeDimensional) // Our lovely distance formula.
+	{
+		if (!threeDimensional)
+		{
 		double xdiff = locA.getX() - locB.getX();
 		double ydiff = locA.getZ() - locB.getZ();
 		double xdiffsq = xdiff * xdiff;
 		double ydiffsq = ydiff * ydiff;
 		double xyadd = xdiffsq + ydiffsq;
 		return Math.sqrt(xyadd);
+		}
+		else
+		{
+			double xdiff = locA.getX() - locB.getX();
+			double ydiff = locA.getZ() - locB.getZ();
+			double zdiff = locA.getY() - locB.getY();
+			double xdiffsq = xdiff * xdiff;
+			double ydiffsq = ydiff * ydiff;
+			double zdiffsq = zdiff * zdiff;
+			double xyzadd = xdiffsq + ydiffsq + zdiffsq;
+			return Math.sqrt(xyzadd);
+		}
 	}
 
 
