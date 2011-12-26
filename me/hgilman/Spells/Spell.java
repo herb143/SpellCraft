@@ -26,7 +26,7 @@ public class Spell {
 		setRequiredItems(items); // Set from the array.
 		
 		spellName = name;
-		spellDescription = desc + " Needs " + printRequiredItems();
+		spellDescription = desc + " Needs" + printRequiredItems();
 		
 		shortName = "";
 		for(int iii=0;iii<name.length();iii++) // Make the short name the Name, but without spaces.
