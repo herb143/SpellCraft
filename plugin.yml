@@ -1,6 +1,7 @@
 name: Spells
 main: me.hgilman.Spells.Spells
 version: 2.0
+depend: [Spout]
 commands:
    spellinfo:
       description: Gives the description of the specified or current spell.
@@ -14,4 +15,3 @@ commands:
       description: Sets the current spell.
       permission: Spells.setspell
       usage: /setspell [spell]
-depend: [Spout]

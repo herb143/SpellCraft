@@ -62,7 +62,7 @@ public class Spells extends SpoutPlugin {
 	
 	public void onEnable()
 	{
-		log.info("Spells plugin loading...");
+		log.info("Spells v2.0 loading...");
 		PluginManager pm = this.getServer().getPluginManager();
 
 		getCommand("spellinfo").setExecutor(spellCommandExecutor);
@@ -78,16 +78,12 @@ public class Spells extends SpoutPlugin {
 		
 		for (Player player : this.getServer().getOnlinePlayers()) { playerJoin(player); } // Set hashmaps for online players.
 		
-		extractFile("GoldenScepter.png", true);
-		goldenScepter = new Scepter(this, "Golden Scepter", "/plugins/Spells/GoldenScepter.png");
+		goldenScepter = new Scepter(this, "Golden Scepter", "http://images.7dunce.com/GoldenScepter.png");
 		SpoutShapedRecipe recipe = new SpoutShapedRecipe(new SpoutItemStack(goldenScepter,1));
 		recipe.shape("SGS", "0S0", "0S0");
 		recipe.setIngredient('S', MaterialData.stick);
 		recipe.setIngredient('G', MaterialData.goldBlock);
 		SpoutManager.getMaterialManager().registerSpoutRecipe(recipe);
-		
-		
-		//SpoutManager.getKeyBindingManager().registerBinding(arg0, arg1, arg2, arg3, arg4)
 		
 		log.info("Spells v2.0 loaded."); // We've made it this far...
 	}
@@ -97,42 +93,5 @@ public class Spells extends SpoutPlugin {
 	{
 		log.info("Spells v2.0 disabled.");
 	}
-	
-	//Code taken from Rycochet TODO: Figure this out
-	public boolean extractFile(String regex, boolean cache) {
-		boolean found = false;
-		try {
-			JarFile jar = new JarFile(getFile());
-			for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements();) {
-				JarEntry entry = (JarEntry) entries.nextElement();
-				String name = entry.getName();
-				if (name.matches(regex)) {
-					if (!getDataFolder().exists()) {
-						getDataFolder().mkdir();
-					}
-					try {
-						File file = new File(getDataFolder(), name);
-						if (!file.exists()) {
-							InputStream is = jar.getInputStream(entry);
-							FileOutputStream fos = new FileOutputStream(file);
-							while (is.available() > 0) {
-								fos.write(is.read());
-							}
-							fos.close();
-							is.close();
-							found = true;
-						}
-						if (cache && name.matches(".*\\.(txt|yml|xml|png|jpg|ogg|midi|wav|zip)$")) {
-							SpoutManager.getFileManager().addToPreLoginCache(this, file);
-						}
-					} catch (Exception e) {
-					}
-				}
-			}
-		} catch (Exception e) {
-		}
-		return found;
-	}
-	//End code taken from Ryochet
 
 }

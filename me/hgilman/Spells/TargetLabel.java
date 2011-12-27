@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
+import org.getspout.spoutapi.inventory.SpoutItemStack;
 
 public class TargetLabel extends GenericLabel {
 	
@@ -58,6 +59,15 @@ public class TargetLabel extends GenericLabel {
 		}
 		
 		this.setText("Current Target: " + printLabel(plugin.getTarget(player))).setDirty(true);
+		
+		if(new SpoutItemStack(player.getItemInHand()).isCustomItem())
+		{
+			this.setVisible(true).setDirty(true);
+		}
+		else
+		{
+			this.setVisible(false).setDirty(true);
+		}
 	}
 	
 	private double getDistance(Location locA, Location locB) // Our lovely distance formula.
