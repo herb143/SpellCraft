@@ -17,18 +17,21 @@ import org.bukkit.plugin.PluginManager;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.inventory.SpoutShapedRecipe;
+import org.getspout.spoutapi.keyboard.KeyBindingManager;
+import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.plugin.SpoutPlugin;
 
 import me.hgilman.Spells.Executors.SpellCommandExecutor;
+import me.hgilman.Spells.Executors.SpellsKeyBindingExecutor;
 import me.hgilman.Spells.Items.Scepter;
 
 public class Spells extends SpoutPlugin {
 	
 	public static Scepter goldenScepter;
-	private SpellCommandExecutor spellCommandExecutor;
+	private final SpellCommandExecutor spellCommandExecutor = new SpellCommandExecutor(this);
 	private final SpellsPlayerListener playerListener = new SpellsPlayerListener(this);
-	private final SpellsInputListener inputListener = new SpellsInputListener(this);
+	private final SpellsKeyBindingExecutor bindingExecutor = new SpellsKeyBindingExecutor(this);
 	public Logger log = Logger.getLogger("Minecraft");
 	private static HashMap<String, SpellBook> playerBooks = new HashMap<String, SpellBook>();
 	private static HashMap<String, LivingEntity> playerTargets = new HashMap<String, LivingEntity>();
@@ -61,27 +64,30 @@ public class Spells extends SpoutPlugin {
 	{
 		log.info("Spells plugin loading...");
 		PluginManager pm = this.getServer().getPluginManager();
-		
-		spellCommandExecutor = new SpellCommandExecutor(this);
+
 		getCommand("spellinfo").setExecutor(spellCommandExecutor);
 		getCommand("listspells").setExecutor(spellCommandExecutor);
 		getCommand("setspell").setExecutor(spellCommandExecutor);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.CUSTOM_EVENT, inputListener,Event.Priority.Normal,this);
+		SpoutManager.getKeyBindingManager().registerBinding("CAST_SPELL", Keyboard.KEY_C, "Cast Spell", bindingExecutor, this);
+		SpoutManager.getKeyBindingManager().registerBinding("SCROLL_SPELLS", Keyboard.KEY_X, "Scroll to Next Spell", bindingExecutor, this);
+		SpoutManager.getKeyBindingManager().registerBinding("TARGET", Keyboard.KEY_R, "Set Target", bindingExecutor, this);		
+		SpoutManager.getKeyBindingManager().registerBinding("TOGGLE_CLICK_TO_CAST", Keyboard.KEY_Z, "Toggle ClickToCast", bindingExecutor, this);	
 		
 		for (Player player : this.getServer().getOnlinePlayers()) { playerJoin(player); } // Set hashmaps for online players.
 		
 		extractFile("GoldenScepter.png", true);
 		goldenScepter = new Scepter(this, "Golden Scepter", "/plugins/Spells/GoldenScepter.png");
-		
 		SpoutShapedRecipe recipe = new SpoutShapedRecipe(new SpoutItemStack(goldenScepter,1));
 		recipe.shape("SGS", "0S0", "0S0");
 		recipe.setIngredient('S', MaterialData.stick);
 		recipe.setIngredient('G', MaterialData.goldBlock);
 		SpoutManager.getMaterialManager().registerSpoutRecipe(recipe);
 		
+		
+		//SpoutManager.getKeyBindingManager().registerBinding(arg0, arg1, arg2, arg3, arg4)
 		
 		log.info("Spells v2.0 loaded."); // We've made it this far...
 	}

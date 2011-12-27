@@ -1,42 +1,46 @@
-package me.hgilman.Spells;
+package me.hgilman.Spells.Executors;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.hgilman.Spells.Spells;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.BlockIterator;
-import org.getspout.spoutapi.event.input.InputListener;
-import org.getspout.spoutapi.event.input.KeyPressedEvent;
+import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
+import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class SpellsInputListener extends InputListener {
+public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
+	
 	private Spells plugin;
-	public SpellsInputListener(Spells instance)
+	
+	public SpellsKeyBindingExecutor(Spells instance)
 	{
 		plugin = instance;
 	}
-
-	public void onKeyPressedEvent(KeyPressedEvent event)
-	{
+	
+	@Override
+	public void keyPressed(KeyBindingEvent event) {
 		SpoutPlayer player = event.getPlayer();
 
 		if (player.getActiveScreen() == ScreenType.GAME_SCREEN && new SpoutItemStack(player.getItemInHand()).isCustomItem())
 		{
 
-			if (event.getKey() == Keyboard.KEY_C)
+			if (event.getBinding().getId() == "CAST_SPELL")
 			{
 
 				plugin.getBook(player).getCurrentSpell().callSpell();
 			}
 
-			if (event.getKey() == Keyboard.KEY_Z)
+			if (event.getBinding().getId() == "TOGGLE_CLICK_TO_CAST")
 			{
 				if (plugin.isClickToCast(player))
 				{
@@ -50,12 +54,12 @@ public class SpellsInputListener extends InputListener {
 				}
 			}
 
-			else if (event.getKey() == Keyboard.KEY_X)
+			else if (event.getBinding().getId() == "SCROLL_SPELLS")
 			{
 
 				plugin.getBook(player).nextSpell();
 			}
-			else if (event.getKey() == Keyboard.KEY_R)
+			else if (event.getBinding().getId() == "TARGET")
 			{
 
 				// CODE BY DIRTYSTARFISH
@@ -107,4 +111,10 @@ public class SpellsInputListener extends InputListener {
 	}
 
 
+	@Override
+	public void keyReleased(KeyBindingEvent event)
+	{
+		// Do nothing
+	}
+	
 }
