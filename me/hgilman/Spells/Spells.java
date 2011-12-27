@@ -5,81 +5,73 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.inventory.SpoutShapedRecipe;
 import org.getspout.spoutapi.material.MaterialData;
-import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.plugin.SpoutPlugin;
 
 import me.hgilman.Spells.Executors.SpellCommandExecutor;
 import me.hgilman.Spells.Items.Scepter;
-import net.minecraft.server.CraftingManager;
-import net.minecraft.server.ShapedRecipes;
 
 public class Spells extends SpoutPlugin {
 	
-	public static HashMap<String, SpellBook> playerBooks = new HashMap<String, SpellBook>();
-	private static HashMap<String, LivingEntity> playerTargets = new HashMap<String, LivingEntity>();
-	private static HashMap<String, TargetLabel> playerTargetLabels = new HashMap<String, TargetLabel>();
-	
-	public LivingEntity getTarget(Player player)
-	{
-		return playerTargets.get(player.getName());
-	}
-	public void setTarget(Player player, LivingEntity target)
-	{
-		playerTargets.put(player.getName(), target);
-	}
-	public void updateTargetLabel(Player player)
-	{
-		playerTargetLabels.get(player.getName()).updateLabel();
-	}
-	public void setTargetLabel(Player player,TargetLabel label)
-	{
-		playerTargetLabels.put(player.getName(),label);
-	}
-	public TargetLabel getTargetLabel(Player player)
-	{
-		return playerTargetLabels.get(player.getName());
-	}
-	
 	public static Scepter goldenScepter;
-	
 	private SpellCommandExecutor spellCommandExecutor;
-	
 	private final SpellsPlayerListener playerListener = new SpellsPlayerListener(this);
 	private final SpellsInputListener inputListener = new SpellsInputListener(this);
-	
 	public Logger log = Logger.getLogger("Minecraft");
+	private static HashMap<String, SpellBook> playerBooks = new HashMap<String, SpellBook>();
+	private static HashMap<String, LivingEntity> playerTargets = new HashMap<String, LivingEntity>();
+	private static HashMap<String, TargetLabel> playerTargetLabels = new HashMap<String, TargetLabel>();
+	private static HashMap<String, Boolean> playerClickToCasts = new HashMap<String,Boolean>();
+	
+	public boolean isClickToCast(Player player) { return playerClickToCasts.get(player.getName()); }
+	public void setClickToCast(Player player,Boolean clickToCast) { playerClickToCasts.put(player.getName(), clickToCast); }
+	public SpellBook getBook(Player player) { return playerBooks.get(player.getName()); }
+	public LivingEntity getTarget(Player player) { return playerTargets.get(player.getName()); }
+	public void setTarget(Player player, LivingEntity target) { playerTargets.put(player.getName(), target); }
+	public void playerQuit(Player player)
+	{
+		String name = player.getName();
+		playerBooks.remove(name);
+		playerTargets.remove(name);
+		playerTargetLabels.remove(name);
+		playerClickToCasts.remove(name);
+	}
+	public void playerJoin(Player player)
+	{
+		String name = player.getName();
+		playerBooks.put(player.getName(), new SpellBook(player,this));
+		playerTargets.put(name, null);
+		playerTargetLabels.put(name, new TargetLabel(this,player));
+		playerClickToCasts.put(name, false); // Click to cast is false by default.
+	}
 	
 	public void onEnable()
 	{
 		log.info("Spells plugin loading...");
 		PluginManager pm = this.getServer().getPluginManager();
-		spellCommandExecutor = new SpellCommandExecutor(this);
-		getCommand("spellinfo").setExecutor(spellCommandExecutor); // Set the executor.
-		getCommand("listspells").setExecutor(spellCommandExecutor); // Set the executor.
-		getCommand("setspell").setExecutor(spellCommandExecutor); // Set the executor.
 		
+		spellCommandExecutor = new SpellCommandExecutor(this);
+		getCommand("spellinfo").setExecutor(spellCommandExecutor);
+		getCommand("listspells").setExecutor(spellCommandExecutor);
+		getCommand("setspell").setExecutor(spellCommandExecutor);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, inputListener,Event.Priority.Normal,this);
+		
+		for (Player player : this.getServer().getOnlinePlayers()) { playerJoin(player); } // Set hashmaps for online players.
 		
 		extractFile("GoldenScepter.png", true);
 		goldenScepter = new Scepter(this, "Golden Scepter", "/plugins/Spells/GoldenScepter.png");
@@ -90,31 +82,14 @@ public class Spells extends SpoutPlugin {
 		recipe.setIngredient('G', MaterialData.goldBlock);
 		SpoutManager.getMaterialManager().registerSpoutRecipe(recipe);
 		
-		// Add spellbooks for online players, if any.
-		Player[] onlinePlayers = this.getServer().getOnlinePlayers();
-		for (int iii=0;iii<onlinePlayers.length;iii++)
-		{
-			playerBooks.put(onlinePlayers[iii].getName(), new SpellBook(onlinePlayers[iii], this));
-		}
-		// Add targets for online players, if any.
-		for (int iii=0;iii<onlinePlayers.length;iii++)
-		{
-			playerTargets.put(onlinePlayers[iii].getName(), null);
-		}
-		// Add targetlabels for online players, if any.
-		for (int iii=0;iii<onlinePlayers.length;iii++)
-		{
-			playerTargetLabels.put(onlinePlayers[iii].getName(), new TargetLabel(this,onlinePlayers[iii]));
-			((SpoutPlayer)onlinePlayers[iii]).getMainScreen().attachWidget(this, this.getTargetLabel(onlinePlayers[iii]));
-		}
 		
-		
-		log.info("Spells plugin loaded."); // We've made it this far...
+		log.info("Spells v2.0 loaded."); // We've made it this far...
 	}
 	
 	public void onDisable()
+	
 	{
-		log.info("Spells plugin disabled.");
+		log.info("Spells v2.0 disabled.");
 	}
 	
 	//Code taken from Rycochet TODO: Figure this out

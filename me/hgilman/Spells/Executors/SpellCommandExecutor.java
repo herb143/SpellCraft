@@ -1,12 +1,10 @@
 package me.hgilman.Spells.Executors;
 
-import java.util.ArrayList;
-
 import me.hgilman.Spells.Spell;
+import me.hgilman.Spells.SpellBook;
 import me.hgilman.Spells.Spells;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,16 +35,17 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					if(args.length==0)
 					{
-						Spell currentSpell = Spells.playerBooks.get(player.getName()).getCurrentSpell(); // Default to the current spell.
+						Spell currentSpell = plugin.getBook(player).getCurrentSpell(); // Default to the current spell.
 						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true) + ": " + currentSpell.getDescription());
 						return true;
 					}
 					else if (args.length==1) // They gave an arg.
 					{
-						if(Spells.playerBooks.get(player.getName()).getSpell(args[0]) != null)
+						SpellBook spellBook = plugin.getBook(player);
+						Spell selectedSpell = spellBook.getSpell(args[0]);
+						if(selectedSpell != null)
 						{
-							Spell spell = Spells.playerBooks.get(player.getName()).getSpell(args[0]);
-							sender.sendMessage(spell.abilityFormat() + ": " + spell.getDescription());
+							sender.sendMessage(selectedSpell.abilityFormat() + ": " + selectedSpell.getDescription());
 							return true;
 						}
 						else
@@ -65,19 +64,17 @@ public class SpellCommandExecutor implements CommandExecutor {
 				else if(command.getName().equalsIgnoreCase("listspells"))
 				{
 					sender.sendMessage("Currently available spells (arrow denotes selection):");
-
-					ArrayList<Spell> spellRegistry = Spells.playerBooks.get(player.getName()).getRegistry();
-
-					for (int iii=0;iii<spellRegistry.size();iii++)
+					SpellBook spellBook = plugin.getBook(player);
+					for (Spell spell : spellBook.getRegistry())
 					{
-						if (spellRegistry.get(iii) == Spells.playerBooks.get(player.getName()).getCurrentSpell())
+						if (spell == spellBook.getCurrentSpell())
 						{
-							sender.sendMessage("   - " + spellRegistry.get(iii).abilityFormat() + " <--"); // It's the current spell.
+							sender.sendMessage("   - " + spell.abilityFormat() + " <--"); // It's the current spell.
 
 						}
 						else
 						{
-							sender.sendMessage("   - " + spellRegistry.get(iii).abilityFormat()); // It's not the current spell.
+							sender.sendMessage("   - " + spell.abilityFormat()); // It's not the current spell.
 						}
 					}
 					sender.sendMessage("Key: " + ChatColor.DARK_GREEN + "(proper resources)" + ChatColor.DARK_RED + " (needs materials)");
@@ -89,11 +86,12 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					if (args.length==1)
 					{
-						if(Spells.playerBooks.get(player.getName()).getSpell(args[0]) != null)
+						SpellBook spellBook = plugin.getBook(player);
+						Spell selectedSpell = spellBook.getSpell(args[0]);
+						if(selectedSpell != null)
 						{
-							Spell spell = Spells.playerBooks.get(player.getName()).getSpell(args[0]);
-							Spells.playerBooks.get(player.getName()).setCurrentSpell(spell);
-							sender.sendMessage("Current spell set to " + spell.abilityFormat() + ".");
+							spellBook.setCurrentSpell(selectedSpell);
+							sender.sendMessage("Current spell set to " + selectedSpell.abilityFormat() + ".");
 							return true;
 						}
 						else

@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.WidgetAnchor;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class TargetLabel extends GenericLabel {
 	
@@ -34,6 +35,7 @@ public class TargetLabel extends GenericLabel {
 		this.setAlign(WidgetAnchor.TOP_RIGHT); //Align the text against the top right corner of the Label
 		this.setAnchor(WidgetAnchor.TOP_RIGHT); //Align the Label against the top right corner of the screen.
 		this.setDirty(true);
+		((SpoutPlayer)player).getMainScreen().attachWidget(plugin,this);
 	}
 	
 	public void updateLabel()
