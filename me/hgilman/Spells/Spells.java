@@ -1,12 +1,6 @@
 package me.hgilman.Spells;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.LivingEntity;
@@ -17,7 +11,6 @@ import org.bukkit.plugin.PluginManager;
 import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.inventory.SpoutShapedRecipe;
-import org.getspout.spoutapi.keyboard.KeyBindingManager;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.plugin.SpoutPlugin;
@@ -35,7 +28,7 @@ public class Spells extends SpoutPlugin {
 	public Logger log = Logger.getLogger("Minecraft");
 	private static HashMap<String, SpellBook> playerBooks = new HashMap<String, SpellBook>();
 	private static HashMap<String, LivingEntity> playerTargets = new HashMap<String, LivingEntity>();
-	private static HashMap<String, TargetLabel> playerTargetLabels = new HashMap<String, TargetLabel>();
+	private static HashMap<String, SpellsInfoLabel> playerInfoLabels = new HashMap<String, SpellsInfoLabel>();
 	private static HashMap<String, Boolean> playerClickToCasts = new HashMap<String,Boolean>();
 	
 	public boolean isClickToCast(Player player) { return playerClickToCasts.get(player.getName()); }
@@ -48,7 +41,7 @@ public class Spells extends SpoutPlugin {
 		String name = player.getName();
 		playerBooks.remove(name);
 		playerTargets.remove(name);
-		playerTargetLabels.remove(name);
+		playerInfoLabels.remove(name);
 		playerClickToCasts.remove(name);
 	}
 	public void playerJoin(Player player)
@@ -56,7 +49,7 @@ public class Spells extends SpoutPlugin {
 		String name = player.getName();
 		playerBooks.put(player.getName(), new SpellBook(player,this));
 		playerTargets.put(name, null);
-		playerTargetLabels.put(name, new TargetLabel(this,player));
+		playerInfoLabels.put(name, new SpellsInfoLabel(this,player));
 		playerClickToCasts.put(name, false); // Click to cast is false by default.
 	}
 	

@@ -7,7 +7,6 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpellsPlayerListener extends PlayerListener
 {

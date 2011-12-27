@@ -5,7 +5,6 @@ import java.util.List;
 
 import me.hgilman.Spells.Spells;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -15,7 +14,6 @@ import org.getspout.spoutapi.event.input.KeyBindingEvent;
 import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
-import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {

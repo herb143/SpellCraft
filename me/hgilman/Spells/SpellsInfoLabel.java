@@ -9,7 +9,7 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 
-public class TargetLabel extends GenericLabel {
+public class SpellsInfoLabel extends GenericLabel {
 	
 	private Player player;
 	private Spells plugin;
@@ -41,7 +41,7 @@ public class TargetLabel extends GenericLabel {
 		}
 	}
 	
-	TargetLabel(Spells iplugin, Player iplayer)
+	SpellsInfoLabel(Spells iplugin, Player iplayer)
 	{
 		super("Current Target: ");
 		plugin = iplugin;
