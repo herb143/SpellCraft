@@ -28,7 +28,7 @@ public class SpellsInfoLabel extends GenericLabel {
 		return returnValue;
 	}
 	
-	String sClickToCast()
+	private String sClickToCast()
 	{
 		boolean bclickToCast = plugin.isClickToCast(player);
 		if(bclickToCast)
@@ -41,13 +41,16 @@ public class SpellsInfoLabel extends GenericLabel {
 		}
 	}
 	
+	
 	SpellsInfoLabel(Spells iplugin, Player iplayer)
 	{
 		super("Current Target: ");
 		plugin = iplugin;
 		player = iplayer;
-		this.setAlign(WidgetAnchor.TOP_RIGHT); //Align the text against the top right corner of the Label
-		this.setAnchor(WidgetAnchor.TOP_RIGHT); //Align the Label against the top right corner of the screen.
+		this.setAlign(WidgetAnchor.BOTTOM_RIGHT); //Align the text against the top right corner of the Label
+		this.setAnchor(WidgetAnchor.BOTTOM_RIGHT); //Align the Label against the top right corner of the screen.
+
+		
 		this.setDirty(true);
 		((SpoutPlayer)player).getMainScreen().attachWidget(plugin,this);
 	}

@@ -5,7 +5,6 @@ Welcome to the magical world of Spells.
 
 
 TODO:
-    -- Add widget showing if ClickToCast is enabled
     -- Incorporate the tareting functions into the spells
     -- Create a visual notifier of when something is targeted (think EVE)
     -- Make the targeting label bigger and closer on the screen, also not so far in the corner
@@ -15,3 +14,4 @@ TODO:
 KNOWN BUGS:
     -- The scepters aren't supposed to stack (Category: Spout Limitations)
     -- When the scepter is dropped, a weird items.png graphic shows up (Category: Spout Limitations)
+    -- The location of the HUD additions is sometimes weird (Category: Spout Limitations)
