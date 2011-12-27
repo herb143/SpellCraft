@@ -11,6 +11,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.getspout.spoutapi.inventory.SpoutItemStack;
+
+
 
 public class SpellCommandExecutor implements CommandExecutor {
 	private Spells plugin;
@@ -27,7 +30,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 		if(sender instanceof Player)
 		{
 			player = (Player) sender;
-			if(player.getItemInHand().getType() == Material.GOLD_HOE)
+			if(new SpoutItemStack(player.getItemInHand()).isCustomItem())
 			{
 				//SPELLINFO
 				if(command.getName().equalsIgnoreCase("spellinfo"))

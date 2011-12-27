@@ -14,3 +14,4 @@ commands:
       description: Sets the current spell.
       permission: Spells.setspell
       usage: /setspell [spell]
+depend: [Spout]

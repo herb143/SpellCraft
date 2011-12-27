@@ -2,3 +2,11 @@ Spells 2.0
 by hgilman, originally by the Aor Minecraft Devteam
 
 Welcome to the magical world of Spells.
+
+
+TODO:
+    -- See if it's possible to get the scepter graphic working every time
+    -- Incorporate the tareting functions into the spells
+    -- Remove all traes of gold hoeage from the code
+    -- Create a visual notifier of when something is targeted (think EVE)
+    -- Make the targeting label bigger and closer on the screen, also not so far in the corner
