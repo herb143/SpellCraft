@@ -1,10 +1,12 @@
 package me.hgilman.Spells;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -29,11 +31,12 @@ public class Spell {
 		spellDescription = desc + " Needs" + printRequiredItems();
 		
 		shortName = "";
+		
 		for(int iii=0;iii<name.length();iii++) // Make the short name the Name, but without spaces.
 		{
 			if(name.charAt(iii)!=' ') // If it's not a space.
 			{
-				shortName = shortName.concat(String.valueOf(name.charAt(iii)));
+				shortName = shortName + String.valueOf(name.charAt(iii));
 			}
 		}
 		
@@ -64,13 +67,15 @@ public class Spell {
 		if (requiredItems.size() > 0) // Assuming there will be something to write.
 		{
 		String returnValue = "";
-		for (int i=0;i<requiredItems.size();i++) // TODO: Replace with iterator.
+		Iterator<ItemStack> itemsIterator = requiredItems.iterator();
+		while(itemsIterator.hasNext())
 		{
-			returnValue = returnValue.concat(" ").concat(String.valueOf(requiredItems.get(i).getAmount()));
-			returnValue = returnValue.concat(" ").concat(formatMaterialName(Material.getMaterial(requiredItems.get(i).getTypeId())));
-			if (requiredItems.size()-1!=i) // We're not on the last one
+			ItemStack currentRequirement = itemsIterator.next();
+			returnValue = returnValue + " " + String.valueOf(currentRequirement.getAmount());
+			returnValue = returnValue + " " +  formatMaterialName(Material.getMaterial(currentRequirement.getTypeId()));
+			if (itemsIterator.hasNext()) // We're not on the last one
 			{
-				returnValue = returnValue.concat(",");
+				returnValue = returnValue + ",";
 			}
 		}
 		
@@ -114,9 +119,9 @@ public class Spell {
 	
 	public void setRequiredItems(ItemStack... items) // If we have a conventional array instead...
 	{
-		for (int i = 0; i < items.length; i++)
+		for (ItemStack item : items)
 		{
-			requiredItems.add(items[i]); // Scroll through and add every item.
+			requiredItems.add(item); // Scroll through and add every item.
 		}
 	}
 	
@@ -128,9 +133,10 @@ public class Spell {
 	public boolean hasRequiredItems()
 	{
 		PlayerInventory inventory = player.getInventory();
-		for (int iii=0;iii<requiredItems.size();iii++) // Loop through requiredItems.
+		
+		for (ItemStack currentRequirement : requiredItems) // Loop through requiredItems.
 		{
-			if(!inventory.contains(requiredItems.get(iii).getType(),requiredItems.get(iii).getAmount()))
+			if(!inventory.contains(currentRequirement.getType(),currentRequirement.getAmount()))
 			{
 				return false; // If any of them are missing
 			}
@@ -151,9 +157,9 @@ public class Spell {
 	{
 		if(hasRequiredItems()) // They must have all the items or we'll run into some messy errors.
 		{
-			for (int ii=0;ii<requiredItems.size();ii++) // TODO: Replace with iterator.
+			for (int iii=0;iii<requiredItems.size();iii++) // We are actually using iii here, so don't correct this loop.
 			{
-				if(!removeRequiredItem(ii))
+				if(!removeRequiredItem(iii))
 				{
 					return false; // If the remove ever fails.
 				}
@@ -284,6 +290,18 @@ public class Spell {
 			double xyzadd = xdiffsq + ydiffsq + zdiffsq;
 			return Math.sqrt(xyzadd);
 		}
+	}
+	
+	protected boolean isOf(Entity entity, Class<?>... classes)
+	{
+		for(Class<?> currentClass : classes)
+		{
+			if(entity.getClass() == currentClass)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 

@@ -54,11 +54,11 @@ public class SpellBook {
 	
 	public Spell getSpell(String spellName)
 	{
-		for(int iii=0;iii<spellRegistry.size();iii++)
+		for(Spell currentSpell : spellRegistry)
 		{
-			if(spellRegistry.get(iii).getShortName().equalsIgnoreCase(spellName))
+			if(currentSpell.getShortName().equalsIgnoreCase(spellName))
 			{
-				return spellRegistry.get(iii);
+				return currentSpell;
 			}
 		}
 		return null; // If we didn't find anything that matched.

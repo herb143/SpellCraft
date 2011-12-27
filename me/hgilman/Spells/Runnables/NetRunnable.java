@@ -17,9 +17,8 @@ public class NetRunnable implements Runnable {
 	
 	public void run()
 	{
-		for(int iii=0;iii<frozenBlocks.size();iii++)
+		for(Block toReset : frozenBlocks)
 		{
-			Block toReset = frozenBlocks.get(iii);
 			if(toReset.getType()==Material.WEB) // As long as nothing has been built over it.
 			{
 				toReset.setType(Material.AIR);

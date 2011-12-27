@@ -2,7 +2,6 @@ package me.hgilman.Spells.Library;
 
 import me.hgilman.Spells.Spells;
 import me.hgilman.Spells.Spell;
-import me.hgilman.Spells.Runnables.SpikeAction;
 import me.hgilman.Spells.Runnables.SpikeRunnable;
 
 import org.bukkit.Material;
@@ -87,26 +86,25 @@ public class SpikeSpell extends Spell {
 		if(getDistance(targetBlock.getLocation(), player.getLocation()) <= range || targetBlock.getType() != Material.AIR) // If it's out of range, or air, they don't need to know.
 		{
 			Block[] targetBlocks = cactusArray(targetBlock);
-			
-			for (int iii=0;iii<getRequiredItems().size();iii++) // Remove all the extra items from the player's inventory.
+			for (ItemStack currentRequirement : getRequiredItems()) // Remove all the extra items from the player's inventory.
 			{
-				if(getRequiredItems().get(iii).getType()==Material.CACTUS)
+				if(currentRequirement.getType()==Material.CACTUS)
 				{
-					removeItem(new ItemStack(Material.CACTUS,getRequiredItems().get(iii).getAmount()-(targetBlocks.length*3))); // Remove any extra cacti
+					removeItem(new ItemStack(Material.CACTUS,currentRequirement.getAmount()-(targetBlocks.length*3))); // Remove any extra cacti
 				}
-				else if(getRequiredItems().get(iii).getType()==Material.SAND)
+				else if(currentRequirement.getType()==Material.SAND)
 				{
-					removeItem(new ItemStack(Material.SAND,getRequiredItems().get(iii).getAmount()-(targetBlocks.length))); // Remove any extra sand
+					removeItem(new ItemStack(Material.SAND,currentRequirement.getAmount()-(targetBlocks.length))); // Remove any extra sand
 				}
-				else if(getRequiredItems().get(iii).getType()==Material.SANDSTONE)
+				else if(currentRequirement.getType()==Material.SANDSTONE)
 				{
-					removeItem(new ItemStack(Material.SANDSTONE,getRequiredItems().get(iii).getAmount())); // Remove any extra sandstone.
+					removeItem(new ItemStack(Material.SANDSTONE,currentRequirement.getAmount())); // Remove any extra sandstone.
 				}
 			}
 			
 			for (int iii=0;iii<targetBlocks.length;iii++)
 			{
-				Spell.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(Spell.getPlugin(), new SpikeRunnable(this,SpikeAction.SINGLE_CACTUS,targetBlocks[iii]),iii);
+				Spell.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(Spell.getPlugin(), new SpikeRunnable(this,SpikeRunnable.SpikeAction.SINGLE_CACTUS,targetBlocks[iii]),iii);
 			}
 		}
 		

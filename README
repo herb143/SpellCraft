@@ -9,6 +9,8 @@ TODO:
     -- Incorporate the tareting functions into the spells
     -- Create a visual notifier of when something is targeted (think EVE)
     -- Make the targeting label bigger and closer on the screen, also not so far in the corner
+    -- Use an advanced spout plugin/something that can make custom items work nicer than raw Spout
+    -- Add range enhancers
 
 KNOWN BUGS:
     -- The scepters aren't supposed to stack (Category: Spout Limitations)

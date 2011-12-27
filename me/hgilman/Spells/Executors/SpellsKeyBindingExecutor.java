@@ -25,6 +25,7 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 		plugin = instance;
 	}
 	
+	
 	@Override
 	public void keyPressed(KeyBindingEvent event) {
 		SpoutPlayer player = event.getPlayer();
@@ -57,37 +58,36 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 			}
 			else if (event.getBinding().getId() == "TARGET")
 			{
-
-				// CODE BY DIRTYSTARFISH
-				List<Entity> nearbyE = player.getNearbyEntities(30,30,30);
-				ArrayList<LivingEntity> livingE = new ArrayList<LivingEntity>();
-
-				for (Entity e : nearbyE) {
-					if (e instanceof LivingEntity) {
-						livingE.add((LivingEntity) e);
+				int targetRange = 15;
+				
+				List<Entity> nearbyEntities = player.getNearbyEntities(targetRange*2,targetRange*2,targetRange*2);
+				ArrayList<LivingEntity> livingEntities = new ArrayList<LivingEntity>();
+				
+				for (Entity entity : nearbyEntities)
+				{
+					if (entity instanceof LivingEntity)
+					{
+						livingEntities.add((LivingEntity) entity);
 					}
 				}
-				BlockIterator bItr = new BlockIterator(player, 15);
-				Block block;
-				Location loc;
-				int bx, by, bz;
-				double ex, ey, ez;
+				BlockIterator blockIterator = new BlockIterator(player, targetRange); // Loop through Player's line of sight.
 				boolean broken = false;
-				// loop through player's line of sight
-				while (bItr.hasNext()) {
-					block = bItr.next();
-					bx = block.getX();
-					by = block.getY();
-					bz = block.getZ();
-					// check for entities near this block in the line of sight
-					for (LivingEntity e : livingE) {
-						loc = e.getLocation();
-						ex = loc.getX();
-						ey = loc.getY();
-						ez = loc.getZ();
-						if ((bx-.75 <= ex && ex <= bx+1.75) && (bz-.75 <= ez && ez <= bz+1.75) && (by-1 <= ey && ey <= by+2.5)) {
-							// entity is close enough, set target and stop
-							plugin.setTarget(player,e);
+				while (blockIterator.hasNext())
+				{
+					Block block = blockIterator.next();
+					int blockX = block.getX();
+					int blockY = block.getY();
+					int blockZ = block.getZ();
+
+					for (LivingEntity entity : livingEntities)
+					{
+						Location entityLocation = entity.getLocation();
+						Double entityX = entityLocation.getX();
+						Double entityY = entityLocation.getY();
+						Double entityZ = entityLocation.getZ();
+						if ((blockX-.75 <= entityX && entityX <= blockX+1.75) && (blockZ-.75 <= entityZ && entityZ <= blockZ+1.75) && (blockY-1 <= entityY && entityY <= blockY+2.5))
+						{
+							plugin.setTarget(player,entity); // It's close enough. Thanks to Dirtystarfish for the approximation code above.
 							broken = true;
 							break;
 						}
@@ -98,8 +98,6 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 				{
 					plugin.setTarget(player,null);
 				}
-
-				// END CODE BY DIRTYSTARFISH
 
 			}
 

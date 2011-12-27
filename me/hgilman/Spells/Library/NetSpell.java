@@ -45,27 +45,16 @@ public class NetSpell extends Spell {
 		super(playerinstance,instance,"Net","Freezes all life in 10-block radius for 10 seconds.",new ItemStack(Material.STRING,10));
 	}
 	
-	protected boolean isOf(Entity entity, Class... classes)
-	{
-		for(int iii=0;iii<classes.length;iii++)
-		{
-			if(entity.getClass() == classes[iii])
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	protected void freezeNearby(LivingEntity center, int range)
 	{
 		List<Entity> nearbyMobs = center.getNearbyEntities(range * 2, (range * 2), (range*2) );
 		ArrayList<Block> frozenBlocks = new ArrayList<Block>();
-		for (int iii=0;iii<nearbyMobs.size();iii++) // Scroll through every entity in the list.
+		for (Entity currentMob : nearbyMobs) // Scroll through every entity in the list.
 		{
-			if(isOf(nearbyMobs.get(iii), CraftCaveSpider.class,CraftChicken.class,CraftCow.class,CraftCreeper.class,CraftEnderDragon.class,CraftEnderman.class,CraftFish.class,CraftGhast.class,CraftGiant.class,CraftMonster.class,CraftPig.class,CraftPigZombie.class,CraftSheep.class,CraftSilverfish.class,CraftSkeleton.class,CraftSlime.class,CraftSnowman.class,CraftSpider.class,CraftSquid.class,CraftVillager.class,CraftWolf.class,CraftZombie.class))
+			if(isOf(currentMob, CraftCaveSpider.class,CraftChicken.class,CraftCow.class,CraftCreeper.class,CraftEnderDragon.class,CraftEnderman.class,CraftFish.class,CraftGhast.class,CraftGiant.class,CraftMonster.class,CraftPig.class,CraftPigZombie.class,CraftSheep.class,CraftSilverfish.class,CraftSkeleton.class,CraftSlime.class,CraftSnowman.class,CraftSpider.class,CraftSquid.class,CraftVillager.class,CraftWolf.class,CraftZombie.class))
 			{
-				Block frozenBlock = nearbyMobs.get(iii).getLocation().getWorld().getBlockAt(nearbyMobs.get(iii).getLocation());
+				Block frozenBlock = currentMob.getLocation().getWorld().getBlockAt(currentMob.getLocation());
 				frozenBlocks.add(frozenBlock);
 				frozenBlock.setType(Material.WEB);
 			}

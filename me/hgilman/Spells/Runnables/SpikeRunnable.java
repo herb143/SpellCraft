@@ -2,7 +2,6 @@ package me.hgilman.Spells.Runnables;
 
 import me.hgilman.Spells.Spell;
 import me.hgilman.Spells.Library.SpikeSpell;
-import me.hgilman.Spells.Runnables.SpikeAction;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +13,13 @@ public class SpikeRunnable implements Runnable {
 	private SpikeAction action;
 	private Material replacerMaterial;
 	private boolean sandstoneSupport;
+	
+	public static enum SpikeAction {
+		CREATE_CACTUS,
+		DESTROY_CACTUS,
+		SINGLE_CACTUS
+	}
+
 	
 	public SpikeRunnable(Block ntargetBlock)
 	{
