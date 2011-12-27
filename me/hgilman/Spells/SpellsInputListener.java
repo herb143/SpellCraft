@@ -3,6 +3,7 @@ package me.hgilman.Spells;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -37,7 +38,16 @@ public class SpellsInputListener extends InputListener {
 
 			if (event.getKey() == Keyboard.KEY_Z)
 			{
-				
+				if (plugin.isClickToCast(player))
+				{
+					plugin.setClickToCast(player, false); // Toggle
+					player.sendMessage(ChatColor.RED + "ClickToCast disabled.");
+				}
+				else
+				{
+					plugin.setClickToCast(player, true);
+					player.sendMessage(ChatColor.GREEN + "ClickToCast enabled.");
+				}
 			}
 
 			else if (event.getKey() == Keyboard.KEY_X)
