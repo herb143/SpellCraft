@@ -6,6 +6,7 @@ Welcome to the magical world of Spells.
 
 TODO:
     -- See if it's possible to get the scepter graphic working every time
+    -- Add widget showing if ClickToCast is enabled
     -- Incorporate the tareting functions into the spells
     -- Remove all traes of gold hoeage from the code
     -- Create a visual notifier of when something is targeted (think EVE)
