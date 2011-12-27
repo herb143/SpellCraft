@@ -45,12 +45,10 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 				if (plugin.isClickToCast(player))
 				{
 					plugin.setClickToCast(player, false); // Toggle
-					player.sendMessage(ChatColor.RED + "ClickToCast disabled.");
 				}
 				else
 				{
 					plugin.setClickToCast(player, true);
-					player.sendMessage(ChatColor.GREEN + "ClickToCast enabled.");
 				}
 			}
 

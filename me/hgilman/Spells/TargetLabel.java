@@ -11,8 +11,8 @@ import org.getspout.spoutapi.inventory.SpoutItemStack;
 
 public class TargetLabel extends GenericLabel {
 	
-	Player player;
-	Spells plugin;
+	private Player player;
+	private Spells plugin;
 	
 	String printLabel(LivingEntity target)
 	{
@@ -28,6 +28,19 @@ public class TargetLabel extends GenericLabel {
 		return returnValue;
 	}
 	
+	String sClickToCast()
+	{
+		boolean bclickToCast = plugin.isClickToCast(player);
+		if(bclickToCast)
+		{
+			return ChatColor.GREEN + "enabled" + ChatColor.WHITE;
+		}
+		else
+		{
+			return ChatColor.RED + "disabled" + ChatColor.WHITE;
+		}
+	}
+	
 	TargetLabel(Spells iplugin, Player iplayer)
 	{
 		super("Current Target: ");
@@ -39,26 +52,23 @@ public class TargetLabel extends GenericLabel {
 		((SpoutPlayer)player).getMainScreen().attachWidget(plugin,this);
 	}
 	
-	public void updateLabel()
-	{
-		this.setText("Current Target: " + plugin.getTarget(player).toString()).setDirty(true);
-	}
-	
 	public void onTick()
 	{
-		if(plugin.getTarget(player) != null)
+		LivingEntity target = plugin.getTarget(player);
+		if(target != null)
 		{
-			if(getDistance(player.getLocation(), plugin.getTarget(player).getLocation()) > 30) // The player is too far away from their target.
+			if(getDistance(player.getLocation(), target.getLocation()) > 30) // The player is too far away from their target.
 			{
 				plugin.setTarget(player, null);
 			}
-			else if(plugin.getTarget(player).isDead())
+			else if(target.isDead())
 			{
 				plugin.setTarget(player, null);
 			}
 		}
+
 		
-		this.setText("Current Target: " + printLabel(plugin.getTarget(player))).setDirty(true);
+		this.setText("Current Target: " + printLabel(target) + "\nClickToCast " + sClickToCast()).setDirty(true);
 		
 		if(new SpoutItemStack(player.getItemInHand()).isCustomItem())
 		{
