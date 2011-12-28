@@ -1,9 +1,8 @@
-package me.hgilman.Spells.Executors;
+package org.spellcraft.executor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.hgilman.Spells.Spells;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -15,12 +14,13 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 import org.getspout.spoutapi.player.SpoutPlayer;
+import org.spellcraft.SpellCraft;
 
 public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 	
-	private static Spells plugin;
+	private static SpellCraft plugin;
 	
-	public SpellsKeyBindingExecutor(Spells instance)
+	public SpellsKeyBindingExecutor(SpellCraft instance)
 	{
 		plugin = instance;
 	}

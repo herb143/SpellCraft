@@ -1,20 +1,14 @@
-Spells 2.0
+SpellCraft
 by hgilman, originally by the Aor Minecraft Devteam
 
-Welcome to the magical world of Spells.
+Once upon a time, the administrators of the glorious realm of Aor Minecraft decreed that a new
+plugin was to be built, a plugin that would awe the dwellers of Aor with dazzling effects and
+magnificent power. This plugin, originally known as SimplePlugin but later called Spells, lived up
+to these high expectations. Unfortunately, it was abandoned when the economy of Aor Minecraft
+crashed and the admins were thrown out of power.
 
+But now, one of those admins has revived Spells, not simply to be another "Magic Plugin" but as a
+fully-fledged API, so that other programmers might bring their powers to the table and build their
+own spells within its powerful framework.
 
-TODO:
-    -- Use an advanced spout plugin/something that can make custom items work nicer than raw Spout ******
-    -- Add range enhancers
-    -- Allow targeting of blocks? nahh or should we?
-    -- Custom GUI for spellbook selection
-    -- YOU BUILD THE SPELLS
-    -- Standardize constructors (plugin,player or reverse or etc)
-    -- Spell idea: sniperfire. fires an arrow with 100% accuracy.
-    -- Make enums for decoyspells and netspells?
-
-KNOWN BUGS:
-    -- The scepters aren't supposed to stack (Category: Spout Limitations)
-    -- When the scepter is dropped, a weird items.png graphic shows up (Category: Spout Limitations)
-    -- The location of the HUD additions is sometimes weird (Category: Spout Limitations)
+Ladies and gentlement, I give you... SpellCraft!

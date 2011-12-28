@@ -1,5 +1,6 @@
-package me.hgilman.Spells;
+package org.spellcraft;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -13,29 +14,32 @@ import org.getspout.spoutapi.inventory.SpoutShapedRecipe;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.plugin.SpoutPlugin;
+import org.spellcraft.executor.SpellCommandExecutor;
+import org.spellcraft.executor.SpellsKeyBindingExecutor;
+import org.spellcraft.item.Scepter;
+import org.spellcraft.listener.ScPlayerListener;
 
-import me.hgilman.Spells.Executors.SpellCommandExecutor;
-import me.hgilman.Spells.Executors.SpellsKeyBindingExecutor;
-import me.hgilman.Spells.Items.Scepter;
+public class SpellCraft extends SpoutPlugin {
 
-public class Spells extends SpoutPlugin {
-	
 	public static Scepter goldenScepter;
 	private final SpellCommandExecutor spellCommandExecutor = new SpellCommandExecutor(this);
-	private final SpellsPlayerListener playerListener = new SpellsPlayerListener(this);
+	private final ScPlayerListener playerListener = new ScPlayerListener(this);
 	private final SpellsKeyBindingExecutor bindingExecutor = new SpellsKeyBindingExecutor(this);
-	public Logger log = Logger.getLogger("Minecraft");
+	private Logger log = Logger.getLogger("Minecraft");
+	public Logger getSpellCraftLogger() { return log; }
 	
-	private static HashMap<String, SpellsPlayerData> playerData = new HashMap<String, SpellsPlayerData>();
-	public SpellsPlayerData getPlayerData(Player player) { return playerData.get(player.getName()); }
+	private static ArrayList<Class<?>> masterSpellList = new ArrayList<Class<?>>();
+	public ArrayList<Class<?>> getSpellList() { return masterSpellList; }
+
+	private static HashMap<String, PlayerData> playerData = new HashMap<String, PlayerData>();
+	public PlayerData getPlayerData(Player player) { return playerData.get(player.getName()); }
 	public void deletePlayerData(Player player) { playerData.remove(player.getName()); }
-	public void newPlayerData(Player player) { playerData.put(player.getName(), new SpellsPlayerData(this,player)); }
-	
+	public void newPlayerData(Player player) { playerData.put(player.getName(), new PlayerData(this,player)); }
+
 	public void onEnable()
 	{
-		log.info("Spells v2.0 loading...");
+		log.info("SpellCraft loading...");
 		PluginManager pm = this.getServer().getPluginManager();
-
 		getCommand("spellinfo").setExecutor(spellCommandExecutor);
 		getCommand("listspells").setExecutor(spellCommandExecutor);
 		getCommand("setspell").setExecutor(spellCommandExecutor);
@@ -48,9 +52,9 @@ public class Spells extends SpoutPlugin {
 		SpoutManager.getKeyBindingManager().registerBinding("SELF_TARGET", Keyboard.KEY_V, "Target Yourself", bindingExecutor, this);	
 		SpoutManager.getKeyBindingManager().registerBinding("UNLOCK_TARGET", Keyboard.KEY_B, "Unlock Target", bindingExecutor, this);	
 		SpoutManager.getKeyBindingManager().registerBinding("TOGGLE_CLICK_TO_CAST", Keyboard.KEY_Z, "Toggle ClickToCast", bindingExecutor, this);	
-		
+
 		for (Player player : this.getServer().getOnlinePlayers()) { newPlayerData(player); } // Set values for online players.
-		
+
 		SpoutManager.getFileManager().addToPreLoginCache(this,"http://images.7dunce.com/GoldenScepter.png");
 		goldenScepter = new Scepter(this, "Golden Scepter", "http://images.7dunce.com/GoldenScepter.png");
 		SpoutShapedRecipe recipe = new SpoutShapedRecipe(new SpoutItemStack(goldenScepter,1));
@@ -58,12 +62,26 @@ public class Spells extends SpoutPlugin {
 		recipe.setIngredient('S', MaterialData.stick);
 		recipe.setIngredient('G', MaterialData.goldBlock);
 		SpoutManager.getMaterialManager().registerSpoutRecipe(recipe);
-		
-		log.info("Spells v2.0 loaded."); // We've made it this far...
+
+		log.info("Spellcraft loaded."); // We've made it this far...
 	}
-	
+
+	public void registerSpell(Class<?> spellClass)
+	{
+		try {
+			if (Class.forName("org.spellcraft.castable.Spell").isAssignableFrom(spellClass))
+			{
+				masterSpellList.add(spellClass);
+				log.info("YES");
+			}
+		} catch (ClassNotFoundException e) {
+			log.info("NO");
+			e.printStackTrace();
+		}
+	}
+
 	public void onDisable()
-	
+
 	{
 		log.info("Spells v2.0 disabled.");
 	}

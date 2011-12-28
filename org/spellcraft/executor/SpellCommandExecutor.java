@@ -1,8 +1,5 @@
-package me.hgilman.Spells.Executors;
+package org.spellcraft.executor;
 
-import me.hgilman.Spells.Spell;
-import me.hgilman.Spells.SpellBook;
-import me.hgilman.Spells.Spells;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,13 +7,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
+import org.spellcraft.SpellBook;
+import org.spellcraft.SpellCraft;
+import org.spellcraft.castable.Spell;
 
 
 
 public class SpellCommandExecutor implements CommandExecutor {
-	private static Spells plugin;
+	private static SpellCraft plugin;
 
-	public SpellCommandExecutor(Spells instance)
+	public SpellCommandExecutor(SpellCraft instance)
 	{
 		plugin = instance;
 	}
@@ -107,7 +107,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 				}
 				else
 				{
-					plugin.log.info(this.toString() + " could not process the commmand: " + command.getName());
+					plugin.getSpellCraftLogger().info(this.toString() + " could not process the commmand: " + command.getName());
 					return false;
 				}
 			}
@@ -119,7 +119,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 		}
 		else
 		{
-			plugin.log.info(sender.getName() + " tried to use an ingame-only command.");
+			plugin.getSpellCraftLogger().info(sender.getName() + " tried to use an ingame-only command.");
 			return false; // Only ingame players may use the spell related commands.
 		}
 	}

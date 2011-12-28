@@ -1,4 +1,4 @@
-package me.hgilman.Spells;
+package org.spellcraft.castable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,23 +11,22 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.spellcraft.SpellCraft;
 
-public class Spell {
+public abstract class AbstractSpell implements Spell {
 
-	protected int range; // TODO: Add range-enhancers.
-	protected static Spells plugin;
-	protected Player player; // Whoever owns the spellbook this is in.
-	private boolean usesTargeting;
+	private int range; // TODO: Add range-enhancers.
+	private static SpellCraft plugin;
+	private Player player; // Whoever owns the spellbook this is in.
+	
+	protected Player getPlayer() { return player; }
+	public SpellCraft getSpellCraft() { return plugin; }
+	protected int getRange() { return range; }
 
-	public static Spells getPlugin() { return plugin; }
-	public Player getPlayer() { return player; }
-	public boolean usesTargeting() { return usesTargeting; }
-
-	public Spell(Player playerinstance, Spells instance, boolean iTargeting, String name, String desc, ItemStack... items)
+	public AbstractSpell(Player playerinstance, SpellCraft instance, String name, String desc, ItemStack... items)
 	{
 		plugin = instance;
 		player = playerinstance;
-		usesTargeting = iTargeting;
 
 		setRequiredItems(items); // Set from the array.
 
@@ -46,17 +45,16 @@ public class Spell {
 
 	}
 	private ArrayList<ItemStack> requiredItems = new ArrayList<ItemStack>(); // The required items.
-
-	public ArrayList<ItemStack> getRequiredItems() { return requiredItems; }
+	
+	protected ArrayList<ItemStack> getRequiredItems() { return requiredItems; }
 
 	// The spell name, description, and shortname:
 	private String spellName;
 	public String getName() { return spellName; }
-	private String spellDescription;
+	private String spellDescription;	
 	public String getDescription() { return spellDescription; }
-	private String shortName;
+	private String shortName;	
 	public String getShortName() { return shortName; }
-
 	private String formatMaterialName(Material material) // Makes material names look nice.
 	{
 		String name = material.toString();
@@ -64,8 +62,18 @@ public class Spell {
 		name = name.toLowerCase();
 		return name;
 
-	}
-
+	}	
+	public boolean usesTargeting() 
+	{ 
+		if(this instanceof TargetingSpell)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}	
 	public String printRequiredItems()
 	{
 		if (requiredItems.size() > 0) // Assuming there will be something to write.
@@ -89,24 +97,30 @@ public class Spell {
 	}
 
 	// Inventory functions:
-
-
 	public String abilityFormat()
 	{
 		return abilityFormat(false);
 	}
+
+	
 	public String abilityFormat(boolean withParentheses)
 	{
 		return abilityFormat(withParentheses,ChatColor.DARK_RED,ChatColor.DARK_GREEN,false);
 	}
+
+	
 	public String abilityFormat(ChatColor colorFalse,ChatColor colorTrue)
 	{
 		return abilityFormat(false,colorFalse,colorTrue,false);
 	}
+
+	
 	public String abilityFormat(boolean withParentheses,boolean targetMarking)
 	{
 		return abilityFormat(withParentheses,ChatColor.DARK_RED,ChatColor.DARK_GREEN,targetMarking);
 	}
+
+	
 	public String abilityFormat(boolean withParentheses,ChatColor colorFalse,ChatColor colorTrue,boolean targetMarking)
 	{
 		String formattedName = "";
@@ -131,10 +145,8 @@ public class Spell {
 			return formattedName;
 		}
 	}
-
-	public void setRequiredItems(ArrayList<ItemStack> items) { requiredItems = items; } // If we're lucky enough to have the arraylist...
-
-	public void setRequiredItems(ItemStack... items) // If we have a conventional array instead...
+	
+	private void setRequiredItems(ItemStack... items) // If we have a conventional array instead...
 	{
 		for (ItemStack item : items)
 		{
@@ -142,12 +154,7 @@ public class Spell {
 		}
 	}
 
-	public void addRequiredItem(ItemStack item)
-	{
-		requiredItems.add(item);
-	}
-
-	public boolean hasRequiredItems()
+	protected boolean hasRequiredItems()
 	{
 		PlayerInventory inventory = player.getInventory();
 
@@ -161,7 +168,8 @@ public class Spell {
 		return true; // We've made it this far.
 	}
 
-	public boolean removeRequiredItem(int index) // Index is which item in the requiredItems arraylist we must remove.
+	
+	protected boolean removeRequiredItem(int index) // Index is which item in the requiredItems arraylist we must remove.
 	{
 		if (requiredItems.size()>index) // Not OOB.
 		{
@@ -170,7 +178,8 @@ public class Spell {
 		return false; // If it's out of bounds, return false.
 	}
 
-	public boolean removeRequiredItems()
+
+	protected boolean removeRequiredItems()
 	{
 		if(hasRequiredItems()) // They must have all the items or we'll run into some messy errors.
 		{
@@ -186,6 +195,8 @@ public class Spell {
 		return false; // Something didn't work out.
 	}
 
+
+	
 	public int removeItem(ItemStack item) { // Removes an itemstack from the inventory. Use this for quantities of items.
 		PlayerInventory inventory = player.getInventory();
 		int amountLeft=item.getAmount();
@@ -218,14 +229,17 @@ public class Spell {
 
 	}
 
-	public void damageItem(int index, int amount)
+	
+	protected void damageItem(int index, int amount)
 	{
 		PlayerInventory inventory = player.getInventory();
 		ItemStack item = inventory.getItem(index);
 		item.setDurability((short)(item.getDurability()+amount)); // Set the durability + amount...
 		if (item.getDurability() >= item.getType().getMaxDurability()) { inventory.removeItem(item); } // It's all used up.
 	}
-	public void damageItem(Material material, int amount) // Same, but using material instead of the index.
+
+	
+	protected void damageItem(Material material, int amount) // Same, but using material instead of the index.
 	{
 		PlayerInventory inventory = player.getInventory();
 		ItemStack item = inventory.getItem(inventory.first(material));
@@ -233,7 +247,9 @@ public class Spell {
 		if (item.getDurability() >= item.getType().getMaxDurability()) { inventory.removeItem(item); } // It's all used up.
 	}
 
-	public int replaceItem(ItemStack original, ItemStack replacer)
+
+	
+	protected int replaceItem(ItemStack original, ItemStack replacer)
 	{
 		PlayerInventory inventory = player.getInventory();
 		int slot = inventory.first(original);
@@ -248,7 +264,9 @@ public class Spell {
 		}
 	}
 
-	public boolean addItem(ItemStack item)
+
+	
+	protected boolean addItem(ItemStack item)
 	{
 		PlayerInventory inventory = player.getInventory();
 		if(inventory.firstEmpty()!=-1) // There is space
@@ -263,43 +281,14 @@ public class Spell {
 	}
 
 	// Spell casting functions:
-	public void callSpell() // The spellbook calls this.
-	{
-		if (hasRequiredItems())
-		{	
-			if (this.usesTargeting())
-			{
-				LivingEntity target = plugin.getPlayerData(player).getTarget();
-				if(target==null || target==player)
-				{
-					castSpell(player);
-				}
-				else
-				{
-					castSpell(target);
-				}
-			}
-			else
-			{
-				castSpell();
-			}
-		}
-		else
-		{
-			player.sendMessage("Could not cast! Spell requires" + printRequiredItems() + "!");
-		}
-	}
 
-	protected void castSpell(LivingEntity target) // This is what actually casts the spell.
-	{
-		player.sendMessage("Sorry. The developers messed up. You should probably tell them about this error.");
-	}
 	
-	protected void castSpell() // This is what actually casts the spell.
-	{
-		player.sendMessage("Sorry. The developers messed up. You should probably tell them about this error.");
-	}
-	
+	public abstract void callSpell(); // The spellbook calls this.
+
+	protected abstract void castSpell(LivingEntity target); // This is what actually casts the spell.
+
+	protected abstract void castSpell(); // This is what actually casts the spell.
+
 	protected double getDistance(Location locA, Location locB)
 	{
 		return getDistance(locA,locB,false); // By default it is false

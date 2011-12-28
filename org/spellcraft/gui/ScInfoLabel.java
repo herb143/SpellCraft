@@ -1,4 +1,4 @@
-package me.hgilman.Spells;
+package org.spellcraft.gui;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -9,13 +9,15 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
+import org.spellcraft.PlayerData;
+import org.spellcraft.SpellCraft;
 
-public class SpellsInfoLabel extends GenericLabel {
+public class ScInfoLabel extends GenericLabel {
 
 	private Player player;
-	private static Spells plugin;
+	private static SpellCraft plugin;
 
-	String printLabel(LivingEntity target)
+	private String printLabel(LivingEntity target)
 	{
 		String returnValue = "";
 
@@ -50,7 +52,7 @@ public class SpellsInfoLabel extends GenericLabel {
 	}
 
 
-	SpellsInfoLabel(Spells iplugin, Player iplayer)
+	public ScInfoLabel(SpellCraft iplugin, Player iplayer)
 	{
 		super("Loading info from Spells v2.0 database...");
 		plugin = iplugin;
@@ -64,7 +66,7 @@ public class SpellsInfoLabel extends GenericLabel {
 
 	public void onTick()
 	{
-		SpellsPlayerData playerData = plugin.getPlayerData(player);
+		PlayerData playerData = plugin.getPlayerData(player);
 
 		LivingEntity target = playerData.getTarget();
 		if(playerData.getTarget() != null)

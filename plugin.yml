@@ -1,5 +1,5 @@
-name: Spells
-main: me.hgilman.Spells.Spells
+name: SpellCraft
+main: org.spellcraft.SpellCraft
 version: 2.0
 depend: [Spout]
 commands:

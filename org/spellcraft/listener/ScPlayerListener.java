@@ -1,4 +1,4 @@
-package me.hgilman.Spells;
+package org.spellcraft.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -7,11 +7,12 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
+import org.spellcraft.SpellCraft;
 
-public class SpellsPlayerListener extends PlayerListener
+public class ScPlayerListener extends PlayerListener
 {
-	public static Spells plugin; // Get the plugin instance.
-	public SpellsPlayerListener(Spells instance)
+	public static SpellCraft plugin; // Get the plugin instance.
+	public ScPlayerListener(SpellCraft instance)
 	{
 		plugin = instance; // Get it.
 	}

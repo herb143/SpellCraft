@@ -1,0 +1,14 @@
+TODO:
+    -- Use an advanced spout plugin/something that can make custom items work nicer than raw Spout ******
+    -- Add range enhancers
+    -- Allow targeting of blocks? nahh or should we?
+    -- Custom GUI for spellbook selection
+    -- YOU BUILD THE SPELLS
+    -- Standardize constructors (plugin,player or reverse or etc)
+    -- Spell idea: sniperfire. fires an arrow with 100% accuracy.
+    -- Make enums for decoyspells and netspells?
+
+KNOWN BUGS:
+    -- The scepters aren't supposed to stack (Category: Spout Limitations)
+    -- When the scepter is dropped, a weird items.png graphic shows up (Category: Spout Limitations)
+    -- The location of the HUD additions is sometimes weird (Category: Spout Limitations)

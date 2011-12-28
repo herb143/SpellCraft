@@ -1,32 +1,33 @@
-package me.hgilman.Spells;
+package org.spellcraft;
 
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.spellcraft.gui.ScInfoLabel;
 
-public class SpellsPlayerData {
+public class PlayerData {
 	
-	private static Spells plugin;
+	private static SpellCraft plugin;
 	private Player player;
 	private SpellBook spellBook;
 	private LivingEntity currentTarget;
-	private SpellsInfoLabel infoLabel;
+	private ScInfoLabel infoLabel;
 	private boolean clickToCast;
 	
-	public SpellsPlayerData(Spells instance,Player pinstance)
+	public PlayerData(SpellCraft instance,Player pinstance)
 	{
 		plugin = instance;
 		player = pinstance;
 		spellBook = new SpellBook(player,plugin);
 		currentTarget = null;
-		infoLabel = new SpellsInfoLabel(plugin,player);
+		infoLabel = new ScInfoLabel(plugin,player);
 		clickToCast = false; // False by default.
 	}
 
 	public SpellBook getSpellBook() { return spellBook; }
 	public LivingEntity getTarget() { return currentTarget; }
 	public boolean hasTarget() { if(currentTarget==null) { return false; } else { return true; } }
-	public SpellsInfoLabel getInfoLabel() { return infoLabel; }
+	public ScInfoLabel getInfoLabel() { return infoLabel; }
 	public boolean isClickToCast() { return clickToCast; }
 	
 	public void setTarget(LivingEntity currentTarget) { this.currentTarget = currentTarget; }
