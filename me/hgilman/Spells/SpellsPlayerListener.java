@@ -18,23 +18,22 @@ public class SpellsPlayerListener extends PlayerListener
 	
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
-		plugin.playerJoin(event.getPlayer());
+		plugin.newPlayerData(event.getPlayer());
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
-		plugin.playerQuit(event.getPlayer());
+		plugin.deletePlayerData(event.getPlayer());
 	}
 	
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
 		
-
 		// Left clicking with golden scepter...
-		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) && new SpoutItemStack(player.getItemInHand()).isCustomItem() && plugin.isClickToCast(player))
+		if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) && new SpoutItemStack(player.getItemInHand()).isCustomItem() && plugin.getPlayerData(player).isClickToCast())
 		{
-			plugin.getBook(player).getCurrentSpell().callSpell();
+			plugin.getPlayerData(player).getSpellBook().getCurrentSpell().callSpell();
 		}
 		
 		

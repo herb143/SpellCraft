@@ -12,7 +12,7 @@ import org.getspout.spoutapi.inventory.SpoutItemStack;
 public class SpellsInfoLabel extends GenericLabel {
 	
 	private Player player;
-	private Spells plugin;
+	private static Spells plugin;
 	
 	String printLabel(LivingEntity target)
 	{
@@ -30,8 +30,7 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	private String sClickToCast()
 	{
-		boolean bclickToCast = plugin.isClickToCast(player);
-		if(bclickToCast)
+		if(plugin.getPlayerData(player).isClickToCast())
 		{
 			return ChatColor.GREEN + "enabled" + ChatColor.WHITE;
 		}
@@ -57,16 +56,16 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	public void onTick()
 	{
-		LivingEntity target = plugin.getTarget(player);
+		LivingEntity target = plugin.getPlayerData(player).getTarget();
 		if(target != null)
 		{
 			if(getDistance(player.getLocation(), target.getLocation()) > 30) // The player is too far away from their target.
 			{
-				plugin.setTarget(player, null);
+				plugin.getPlayerData(player).setTarget(null);
 			}
 			else if(target.isDead())
 			{
-				plugin.setTarget(player, null);
+				plugin.getPlayerData(player).setTarget(null);
 			}
 		}
 

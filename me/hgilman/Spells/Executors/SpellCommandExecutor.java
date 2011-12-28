@@ -14,7 +14,7 @@ import org.getspout.spoutapi.inventory.SpoutItemStack;
 
 
 public class SpellCommandExecutor implements CommandExecutor {
-	private Spells plugin;
+	private static Spells plugin;
 
 	public SpellCommandExecutor(Spells instance)
 	{
@@ -35,13 +35,13 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					if(args.length==0)
 					{
-						Spell currentSpell = plugin.getBook(player).getCurrentSpell(); // Default to the current spell.
+						Spell currentSpell = plugin.getPlayerData(player).getSpellBook().getCurrentSpell(); // Default to the current spell.
 						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true) + ": " + currentSpell.getDescription());
 						return true;
 					}
 					else if (args.length==1) // They gave an arg.
 					{
-						SpellBook spellBook = plugin.getBook(player);
+						SpellBook spellBook = plugin.getPlayerData(player).getSpellBook();
 						Spell selectedSpell = spellBook.getSpell(args[0]);
 						if(selectedSpell != null)
 						{
@@ -64,7 +64,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 				else if(command.getName().equalsIgnoreCase("listspells"))
 				{
 					sender.sendMessage("Currently available spells (arrow denotes selection):");
-					SpellBook spellBook = plugin.getBook(player);
+					SpellBook spellBook = plugin.getPlayerData(player).getSpellBook();
 					for (Spell spell : spellBook.getRegistry())
 					{
 						if (spell == spellBook.getCurrentSpell())
@@ -86,7 +86,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 				{
 					if (args.length==1)
 					{
-						SpellBook spellBook = plugin.getBook(player);
+						SpellBook spellBook = plugin.getPlayerData(player).getSpellBook();
 						Spell selectedSpell = spellBook.getSpell(args[0]);
 						if(selectedSpell != null)
 						{

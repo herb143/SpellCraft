@@ -18,7 +18,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 	
-	private Spells plugin;
+	private static Spells plugin;
 	
 	public SpellsKeyBindingExecutor(Spells instance)
 	{
@@ -36,25 +36,25 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 			if (event.getBinding().getId() == "CAST_SPELL")
 			{
 
-				plugin.getBook(player).getCurrentSpell().callSpell();
+				plugin.getPlayerData(player).getSpellBook().getCurrentSpell().callSpell();
 			}
 
 			if (event.getBinding().getId() == "TOGGLE_CLICK_TO_CAST")
 			{
-				if (plugin.isClickToCast(player))
+				if (plugin.getPlayerData(player).isClickToCast())
 				{
-					plugin.setClickToCast(player, false); // Toggle
+					plugin.getPlayerData(player).setClickToCast(false); // Toggle
 				}
 				else
 				{
-					plugin.setClickToCast(player, true);
+					plugin.getPlayerData(player).setClickToCast(true);
 				}
 			}
 
 			else if (event.getBinding().getId() == "SCROLL_SPELLS")
 			{
 
-				plugin.getBook(player).nextSpell();
+				plugin.getPlayerData(player).getSpellBook().nextSpell();
 			}
 			else if (event.getBinding().getId() == "TARGET")
 			{
@@ -87,7 +87,7 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 						Double entityZ = entityLocation.getZ();
 						if ((blockX-.75 <= entityX && entityX <= blockX+1.75) && (blockZ-.75 <= entityZ && entityZ <= blockZ+1.75) && (blockY-1 <= entityY && entityY <= blockY+2.5))
 						{
-							plugin.setTarget(player,entity); // It's close enough. Thanks to Dirtystarfish for the approximation code above.
+							plugin.getPlayerData(player).setTarget(entity); // It's close enough. Thanks to Dirtystarfish for the approximation code above.
 							broken = true;
 							break;
 						}
@@ -96,7 +96,7 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 				}
 				if(!broken) // We didn't find anything
 				{
-					plugin.setTarget(player,null);
+					plugin.getPlayerData(player).setTarget(null);
 				}
 
 			}

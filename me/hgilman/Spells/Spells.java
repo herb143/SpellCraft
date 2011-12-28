@@ -3,7 +3,6 @@ package me.hgilman.Spells;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
@@ -26,32 +25,11 @@ public class Spells extends SpoutPlugin {
 	private final SpellsPlayerListener playerListener = new SpellsPlayerListener(this);
 	private final SpellsKeyBindingExecutor bindingExecutor = new SpellsKeyBindingExecutor(this);
 	public Logger log = Logger.getLogger("Minecraft");
-	private static HashMap<String, SpellBook> playerBooks = new HashMap<String, SpellBook>();
-	private static HashMap<String, LivingEntity> playerTargets = new HashMap<String, LivingEntity>();
-	private static HashMap<String, SpellsInfoLabel> playerInfoLabels = new HashMap<String, SpellsInfoLabel>();
-	private static HashMap<String, Boolean> playerClickToCasts = new HashMap<String,Boolean>();
 	
-	public boolean isClickToCast(Player player) { return playerClickToCasts.get(player.getName()); }
-	public void setClickToCast(Player player,Boolean clickToCast) { playerClickToCasts.put(player.getName(), clickToCast); }
-	public SpellBook getBook(Player player) { return playerBooks.get(player.getName()); }
-	public LivingEntity getTarget(Player player) { return playerTargets.get(player.getName()); }
-	public void setTarget(Player player, LivingEntity target) { playerTargets.put(player.getName(), target); }
-	public void playerQuit(Player player)
-	{
-		String name = player.getName();
-		playerBooks.remove(name);
-		playerTargets.remove(name);
-		playerInfoLabels.remove(name);
-		playerClickToCasts.remove(name);
-	}
-	public void playerJoin(Player player)
-	{
-		String name = player.getName();
-		playerBooks.put(player.getName(), new SpellBook(player,this));
-		playerTargets.put(name, null);
-		playerInfoLabels.put(name, new SpellsInfoLabel(this,player));
-		playerClickToCasts.put(name, false); // Click to cast is false by default.
-	}
+	private static HashMap<String, SpellsPlayerData> playerData = new HashMap<String, SpellsPlayerData>();
+	public SpellsPlayerData getPlayerData(Player player) { return playerData.get(player.getName()); }
+	public void deletePlayerData(Player player) { playerData.remove(player.getName()); }
+	public void newPlayerData(Player player) { playerData.put(player.getName(), new SpellsPlayerData(this,player)); }
 	
 	public void onEnable()
 	{
@@ -69,8 +47,9 @@ public class Spells extends SpoutPlugin {
 		SpoutManager.getKeyBindingManager().registerBinding("TARGET", Keyboard.KEY_R, "Set Target", bindingExecutor, this);		
 		SpoutManager.getKeyBindingManager().registerBinding("TOGGLE_CLICK_TO_CAST", Keyboard.KEY_Z, "Toggle ClickToCast", bindingExecutor, this);	
 		
-		for (Player player : this.getServer().getOnlinePlayers()) { playerJoin(player); } // Set hashmaps for online players.
+		for (Player player : this.getServer().getOnlinePlayers()) { newPlayerData(player); } // Set values for online players.
 		
+		SpoutManager.getFileManager().addToPreLoginCache(this,"http://images.7dunce.com/GoldenScepter.png");
 		goldenScepter = new Scepter(this, "Golden Scepter", "http://images.7dunce.com/GoldenScepter.png");
 		SpoutShapedRecipe recipe = new SpoutShapedRecipe(new SpoutItemStack(goldenScepter,1));
 		recipe.shape("SGS", "0S0", "0S0");

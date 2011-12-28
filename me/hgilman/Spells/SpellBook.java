@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class SpellBook {
-	private Spells plugin;
+	private static Spells plugin;
 	private Player player;
 	
 	public SpellBook(Player playerinstance, Spells instance)
