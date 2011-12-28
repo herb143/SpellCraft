@@ -44,7 +44,8 @@ public class Spells extends SpoutPlugin {
 		pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
 		SpoutManager.getKeyBindingManager().registerBinding("CAST_SPELL", Keyboard.KEY_C, "Cast Spell", bindingExecutor, this);
 		SpoutManager.getKeyBindingManager().registerBinding("SCROLL_SPELLS", Keyboard.KEY_X, "Scroll to Next Spell", bindingExecutor, this);
-		SpoutManager.getKeyBindingManager().registerBinding("TARGET", Keyboard.KEY_R, "Set Target", bindingExecutor, this);		
+		SpoutManager.getKeyBindingManager().registerBinding("TARGET", Keyboard.KEY_R, "Set Target", bindingExecutor, this);	
+		SpoutManager.getKeyBindingManager().registerBinding("SELF_TARGET", Keyboard.KEY_F, "Target Yourself", bindingExecutor, this);	
 		SpoutManager.getKeyBindingManager().registerBinding("TOGGLE_CLICK_TO_CAST", Keyboard.KEY_Z, "Toggle ClickToCast", bindingExecutor, this);	
 		
 		for (Player player : this.getServer().getOnlinePlayers()) { newPlayerData(player); } // Set values for online players.

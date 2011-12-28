@@ -100,6 +100,10 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 				}
 
 			}
+			else if(event.getBinding().getId() == "SELF_TARGET")
+			{
+				plugin.getPlayerData(player).setTarget((LivingEntity)player);
+			}
 
 		}
 	}
