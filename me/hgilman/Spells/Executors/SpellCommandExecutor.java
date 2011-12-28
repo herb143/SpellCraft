@@ -36,7 +36,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 					if(args.length==0)
 					{
 						Spell currentSpell = plugin.getPlayerData(player).getSpellBook().getCurrentSpell(); // Default to the current spell.
-						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true) + ": " + currentSpell.getDescription());
+						sender.sendMessage("Current spell " + currentSpell.abilityFormat(true,true) + ": " + currentSpell.getDescription());
 						return true;
 					}
 					else if (args.length==1) // They gave an arg.
@@ -45,7 +45,7 @@ public class SpellCommandExecutor implements CommandExecutor {
 						Spell selectedSpell = spellBook.getSpell(args[0]);
 						if(selectedSpell != null)
 						{
-							sender.sendMessage(selectedSpell.abilityFormat() + ": " + selectedSpell.getDescription());
+							sender.sendMessage(selectedSpell.abilityFormat(false,true) + ": " + selectedSpell.getDescription());
 							return true;
 						}
 						else
@@ -69,15 +69,16 @@ public class SpellCommandExecutor implements CommandExecutor {
 					{
 						if (spell == spellBook.getCurrentSpell())
 						{
-							sender.sendMessage("   - " + spell.abilityFormat() + " <--"); // It's the current spell.
+							sender.sendMessage("   - " + spell.abilityFormat(false,true) + " <--"); // It's the current spell.
 
 						}
 						else
 						{
-							sender.sendMessage("   - " + spell.abilityFormat()); // It's not the current spell.
+							sender.sendMessage("   - " + spell.abilityFormat(false,true)); // It's not the current spell.
 						}
 					}
 					sender.sendMessage("Key: " + ChatColor.DARK_GREEN + "(proper resources)" + ChatColor.DARK_RED + " (needs materials)");
+					sender.sendMessage(ChatColor.GOLD + "(T)" + ChatColor.WHITE + " denotes targeting functionality.");
 					return true;
 				}
 
@@ -91,7 +92,6 @@ public class SpellCommandExecutor implements CommandExecutor {
 						if(selectedSpell != null)
 						{
 							spellBook.setCurrentSpell(selectedSpell);
-							sender.sendMessage("Current spell set to " + selectedSpell.abilityFormat() + ".");
 							return true;
 						}
 						else

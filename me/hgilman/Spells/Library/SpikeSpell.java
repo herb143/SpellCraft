@@ -6,23 +6,24 @@ import me.hgilman.Spells.Runnables.SpikeRunnable;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class SpikeSpell extends Spell {
-	
+
 	public enum SpellType {
 		BASIC,
 		WALL,
 		FORT
 	}
-	
+
 	protected int range = 30;
 	private SpellType spellType;
-	
+
 	public SpikeSpell(Player playerinstance, Spells instance, SpellType ispellType, int nrange, String iname,String idescription,ItemStack... irequirements)
 	{
-		super(playerinstance,instance,iname,idescription,irequirements); // Call the super constructor.
+		super(playerinstance,instance,true,iname,idescription,irequirements); // Call the super constructor.
 		spellType = ispellType;
 	}
 	private Block[] cactusArray(Block center)
@@ -50,7 +51,7 @@ public class SpikeSpell extends Spell {
 		else if (spellType==SpellType.FORT)
 		{
 			blocks = new Block[20];
-			
+
 			blocks[0] = center.getRelative(0, 0, 2);
 			blocks[1] = blocks[0].getRelative(2,0,0);
 			blocks[2] = blocks[0].getRelative(-2, 0, 0);
@@ -59,7 +60,7 @@ public class SpikeSpell extends Spell {
 			blocks[5] = center.getRelative(0, 0, -2);
 			blocks[6] = blocks[5].getRelative(-2, 0, 0);
 			blocks[7] = center.getRelative(-2, 0, 0);
-			
+
 			blocks[8] = center.getRelative(-1,0,3);
 			blocks[9] = center.getRelative(-3,0,3);
 			blocks[10] = center.getRelative(1,0,3);
@@ -79,9 +80,19 @@ public class SpikeSpell extends Spell {
 			return null;
 		}
 	}
-	protected void castSpell()
+	protected void castSpell(LivingEntity target)
 	{
-		Block targetBlock = player.getTargetBlock(null, 101);
+		Block targetBlock;
+		
+		if(target==player && spellType==SpellType.BASIC)
+		{
+			plugin.getPlayerData(player).setTarget(null); // Unlock the player target.
+			targetBlock = player.getTargetBlock(null, 101); // We don't want the player to spike himself.
+		}
+		else
+		{
+			targetBlock = target.getWorld().getBlockAt(target.getLocation()).getRelative(0, -1, 0); // The sand is below the target, so they get caught in the cactus.
+		}
 		
 		if(getDistance(targetBlock.getLocation(), player.getLocation()) <= range || targetBlock.getType() != Material.AIR) // If it's out of range, or air, they don't need to know.
 		{
@@ -101,14 +112,14 @@ public class SpikeSpell extends Spell {
 					removeItem(new ItemStack(Material.SANDSTONE,currentRequirement.getAmount())); // Remove any extra sandstone.
 				}
 			}
-			
+
 			for (int iii=0;iii<targetBlocks.length;iii++)
 			{
 				Spell.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(Spell.getPlugin(), new SpikeRunnable(this,SpikeRunnable.SpikeAction.SINGLE_CACTUS,targetBlocks[iii]),iii);
 			}
 		}
-		
+
 	}
-	
-	
+
+
 }

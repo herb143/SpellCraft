@@ -27,7 +27,7 @@ public class DecoySpell extends Spell {
 
 	public DecoySpell(int nrange,int ntargetRadius,CreatureType nCreatureType,int nlastsforseconds, Player playerinstance, Spells instance, String Name,String Description,ItemStack... items)
 	{
-		super(playerinstance,instance,Name,Description,items); // Call the super constructor.
+		super(playerinstance,instance,false,Name,Description,items); // Call the super constructor.
 		range = nrange;
 		targetRadius = ntargetRadius;
 		creatureType = nCreatureType;

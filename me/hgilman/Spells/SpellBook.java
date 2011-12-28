@@ -48,6 +48,10 @@ public class SpellBook {
 	{
 		if (index!=spellRegistry.size()-1) {index++;} // If we're not on the last one, advance.
 		else { index = 0; } // Or go back to start.
+		if (!getCurrentSpell().usesTargeting())
+		{
+			plugin.getPlayerData(player).setTarget(null); // We lose targets when scrolling throuhg non-targeting spells.
+		}
 	}
 	
 	public Spell getSpell(String spellName)

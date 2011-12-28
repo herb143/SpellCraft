@@ -79,9 +79,14 @@ public class SpellsInfoLabel extends GenericLabel {
 			}
 		}
 
-
-		this.setText("Target: " + printLabel(target) + "\nSpell: " + playerData.getSpellBook().getCurrentSpell().abilityFormat(ChatColor.RED,ChatColor.GREEN) + "\nClickToCast " + sClickToCast()).setDirty(true);
-
+		if (playerData.getSpellBook().getCurrentSpell().usesTargeting())
+		{
+			this.setText("Target: " + printLabel(target) + "\nSpell: " + playerData.getSpellBook().getCurrentSpell().abilityFormat(ChatColor.RED,ChatColor.GREEN) + "\nClickToCast " + sClickToCast()).setDirty(true);
+		}
+		else
+		{
+			this.setText("Spell: " + playerData.getSpellBook().getCurrentSpell().abilityFormat(ChatColor.RED,ChatColor.GREEN) + "\nClickToCast " + sClickToCast()).setDirty(true);
+		}
 		if(new SpoutItemStack(player.getItemInHand()).isCustomItem())
 		{
 			this.setVisible(true).setDirty(true);

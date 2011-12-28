@@ -7,31 +7,35 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class Spell {
-	
+
 	protected int range; // TODO: Add range-enhancers.
 	protected static Spells plugin;
 	protected Player player; // Whoever owns the spellbook this is in.
-	
+	private boolean usesTargeting;
+
 	public static Spells getPlugin() { return plugin; }
 	public Player getPlayer() { return player; }
+	public boolean usesTargeting() { return usesTargeting; }
 
-	public Spell(Player playerinstance, Spells instance, String name, String desc, ItemStack... items)
+	public Spell(Player playerinstance, Spells instance, boolean iTargeting, String name, String desc, ItemStack... items)
 	{
 		plugin = instance;
 		player = playerinstance;
+		usesTargeting = iTargeting;
 
 		setRequiredItems(items); // Set from the array.
-		
+
 		spellName = name;
 		spellDescription = desc + " Needs" + printRequiredItems();
-		
+
 		shortName = "";
-		
+
 		for(int iii=0;iii<name.length();iii++) // Make the short name the Name, but without spaces.
 		{
 			if(name.charAt(iii)!=' ') // If it's not a space.
@@ -39,12 +43,12 @@ public class Spell {
 				shortName = shortName + String.valueOf(name.charAt(iii));
 			}
 		}
-		
+
 	}
 	private ArrayList<ItemStack> requiredItems = new ArrayList<ItemStack>(); // The required items.
-	
+
 	public ArrayList<ItemStack> getRequiredItems() { return requiredItems; }
-	
+
 	// The spell name, description, and shortname:
 	private String spellName;
 	public String getName() { return spellName; }
@@ -52,40 +56,40 @@ public class Spell {
 	public String getDescription() { return spellDescription; }
 	private String shortName;
 	public String getShortName() { return shortName; }
-	
+
 	private String formatMaterialName(Material material) // Makes material names look nice.
 	{
 		String name = material.toString();
 		name = name.replace('_', ' ');
 		name = name.toLowerCase();
 		return name;
-		
+
 	}
-	
+
 	public String printRequiredItems()
 	{
 		if (requiredItems.size() > 0) // Assuming there will be something to write.
 		{
-		String returnValue = "";
-		Iterator<ItemStack> itemsIterator = requiredItems.iterator();
-		while(itemsIterator.hasNext())
-		{
-			ItemStack currentRequirement = itemsIterator.next();
-			returnValue = returnValue + " " + String.valueOf(currentRequirement.getAmount());
-			returnValue = returnValue + " " +  formatMaterialName(Material.getMaterial(currentRequirement.getTypeId()));
-			if (itemsIterator.hasNext()) // We're not on the last one
+			String returnValue = "";
+			Iterator<ItemStack> itemsIterator = requiredItems.iterator();
+			while(itemsIterator.hasNext())
 			{
-				returnValue = returnValue + ",";
+				ItemStack currentRequirement = itemsIterator.next();
+				returnValue = returnValue + " " + String.valueOf(currentRequirement.getAmount());
+				returnValue = returnValue + " " +  formatMaterialName(Material.getMaterial(currentRequirement.getTypeId()));
+				if (itemsIterator.hasNext()) // We're not on the last one
+				{
+					returnValue = returnValue + ",";
+				}
 			}
-		}
-		
-		return returnValue;
+
+			return returnValue;
 		}
 		return ""; // If there are not requirements (probably won't happen?)
 	}
-	
+
 	// Inventory functions:
-	
+
 
 	public String abilityFormat()
 	{
@@ -93,13 +97,17 @@ public class Spell {
 	}
 	public String abilityFormat(boolean withParentheses)
 	{
-		return abilityFormat(withParentheses,ChatColor.DARK_RED,ChatColor.DARK_GREEN);
+		return abilityFormat(withParentheses,ChatColor.DARK_RED,ChatColor.DARK_GREEN,false);
 	}
 	public String abilityFormat(ChatColor colorFalse,ChatColor colorTrue)
 	{
-		return abilityFormat(false,colorFalse,colorTrue);
+		return abilityFormat(false,colorFalse,colorTrue,false);
 	}
-	public String abilityFormat(boolean withParentheses,ChatColor colorFalse,ChatColor colorTrue)
+	public String abilityFormat(boolean withParentheses,boolean targetMarking)
+	{
+		return abilityFormat(withParentheses,ChatColor.DARK_RED,ChatColor.DARK_GREEN,targetMarking);
+	}
+	public String abilityFormat(boolean withParentheses,ChatColor colorFalse,ChatColor colorTrue,boolean targetMarking)
 	{
 		String formattedName = "";
 		if(hasRequiredItems())
@@ -107,6 +115,7 @@ public class Spell {
 			formattedName = formattedName + colorTrue;
 			if(withParentheses) { formattedName = formattedName + "("; }
 			formattedName = formattedName + spellName;
+			if(targetMarking && this.usesTargeting()) { formattedName = formattedName + ChatColor.GOLD + " (T)"; }
 			if(withParentheses) { formattedName = formattedName + ")"; }
 			formattedName = formattedName + ChatColor.WHITE;
 			return formattedName;
@@ -116,14 +125,15 @@ public class Spell {
 			formattedName = formattedName + colorFalse;
 			if(withParentheses) { formattedName = formattedName + "("; }
 			formattedName = formattedName + spellName;
+			if(targetMarking && this.usesTargeting()) { formattedName = formattedName + ChatColor.GOLD + " (T)"; }
 			if(withParentheses) { formattedName = formattedName + ")"; }
 			formattedName = formattedName + ChatColor.WHITE;
 			return formattedName;
 		}
 	}
-	
+
 	public void setRequiredItems(ArrayList<ItemStack> items) { requiredItems = items; } // If we're lucky enough to have the arraylist...
-	
+
 	public void setRequiredItems(ItemStack... items) // If we have a conventional array instead...
 	{
 		for (ItemStack item : items)
@@ -131,16 +141,16 @@ public class Spell {
 			requiredItems.add(item); // Scroll through and add every item.
 		}
 	}
-	
+
 	public void addRequiredItem(ItemStack item)
 	{
 		requiredItems.add(item);
 	}
-	
+
 	public boolean hasRequiredItems()
 	{
 		PlayerInventory inventory = player.getInventory();
-		
+
 		for (ItemStack currentRequirement : requiredItems) // Loop through requiredItems.
 		{
 			if(!inventory.contains(currentRequirement.getType(),currentRequirement.getAmount()))
@@ -150,7 +160,7 @@ public class Spell {
 		}
 		return true; // We've made it this far.
 	}
-	
+
 	public boolean removeRequiredItem(int index) // Index is which item in the requiredItems arraylist we must remove.
 	{
 		if (requiredItems.size()>index) // Not OOB.
@@ -159,7 +169,7 @@ public class Spell {
 		}
 		return false; // If it's out of bounds, return false.
 	}
-	
+
 	public boolean removeRequiredItems()
 	{
 		if(hasRequiredItems()) // They must have all the items or we'll run into some messy errors.
@@ -175,7 +185,7 @@ public class Spell {
 		}
 		return false; // Something didn't work out.
 	}
-	
+
 	public int removeItem(ItemStack item) { // Removes an itemstack from the inventory. Use this for quantities of items.
 		PlayerInventory inventory = player.getInventory();
 		int amountLeft=item.getAmount();
@@ -205,9 +215,9 @@ public class Spell {
 			}
 		}
 		return -1; // Some weird value.
-		
+
 	}
-	
+
 	public void damageItem(int index, int amount)
 	{
 		PlayerInventory inventory = player.getInventory();
@@ -222,7 +232,7 @@ public class Spell {
 		item.setDurability((short)(item.getDurability()+amount)); // Set the durability + amount...
 		if (item.getDurability() >= item.getType().getMaxDurability()) { inventory.removeItem(item); } // It's all used up.
 	}
-	
+
 	public int replaceItem(ItemStack original, ItemStack replacer)
 	{
 		PlayerInventory inventory = player.getInventory();
@@ -237,7 +247,7 @@ public class Spell {
 			return -1;
 		}
 	}
-	
+
 	public boolean addItem(ItemStack item)
 	{
 		PlayerInventory inventory = player.getInventory();
@@ -251,18 +261,38 @@ public class Spell {
 			return false; // It didn't work.
 		}
 	}
-	
+
 	// Spell casting functions:
 	public void callSpell() // The spellbook calls this.
 	{
 		if (hasRequiredItems())
-		{
-			castSpell();
+		{	
+			if (this.usesTargeting())
+			{
+				LivingEntity target = plugin.getPlayerData(player).getTarget();
+				if(target==null || target==player)
+				{
+					castSpell(player);
+				}
+				else
+				{
+					castSpell(target);
+				}
+			}
+			else
+			{
+				castSpell();
+			}
 		}
 		else
 		{
 			player.sendMessage("Could not cast! Spell requires" + printRequiredItems() + "!");
 		}
+	}
+
+	protected void castSpell(LivingEntity target) // This is what actually casts the spell.
+	{
+		player.sendMessage("Sorry. The developers messed up. You should probably tell them about this error.");
 	}
 	
 	protected void castSpell() // This is what actually casts the spell.
@@ -274,17 +304,17 @@ public class Spell {
 	{
 		return getDistance(locA,locB,false); // By default it is false
 	}
-	
+
 	protected double getDistance(Location locA, Location locB,boolean threeDimensional) // Our lovely distance formula.
 	{
 		if (!threeDimensional)
 		{
-		double xdiff = locA.getX() - locB.getX();
-		double ydiff = locA.getZ() - locB.getZ();
-		double xdiffsq = xdiff * xdiff;
-		double ydiffsq = ydiff * ydiff;
-		double xyadd = xdiffsq + ydiffsq;
-		return Math.sqrt(xyadd);
+			double xdiff = locA.getX() - locB.getX();
+			double ydiff = locA.getZ() - locB.getZ();
+			double xdiffsq = xdiff * xdiff;
+			double ydiffsq = ydiff * ydiff;
+			double xyadd = xdiffsq + ydiffsq;
+			return Math.sqrt(xyadd);
 		}
 		else
 		{
@@ -298,7 +328,7 @@ public class Spell {
 			return Math.sqrt(xyzadd);
 		}
 	}
-	
+
 	protected boolean isOf(Entity entity, Class<?>... classes)
 	{
 		for(Class<?> currentClass : classes)

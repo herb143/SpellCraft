@@ -104,6 +104,10 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 			{
 				plugin.getPlayerData(player).setTarget((LivingEntity)player);
 			}
+			else if(event.getBinding().getId() == "UNLOCK_TARGET")
+			{
+				plugin.getPlayerData(player).setTarget(null);
+			}
 
 		}
 	}

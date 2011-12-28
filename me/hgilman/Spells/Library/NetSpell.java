@@ -36,16 +36,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class NetSpell extends Spell {
-	
+
 	protected int range = 30;
 	private int radius = 10;
-	
+
 	public NetSpell(Spells instance, Player playerinstance)
 	{
-		super(playerinstance,instance,"Net","Freezes all life in 10-block radius for 10 seconds.",new ItemStack(Material.STRING,10));
+		super(playerinstance,instance,true,"Net","Freezes all life in 10-block radius for 10 seconds.",new ItemStack(Material.STRING,10));
 	}
-	
-	
+
+
 	protected void freezeNearby(LivingEntity center, int range)
 	{
 		List<Entity> nearbyMobs = center.getNearbyEntities(range * 2, (range * 2), (range*2) );
@@ -61,9 +61,9 @@ public class NetSpell extends Spell {
 		}
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new NetRunnable(frozenBlocks), (200));
 	}
-	
-	protected void castSpell()
+
+	protected void castSpell(LivingEntity target)
 	{
-		freezeNearby(player,radius);
+		freezeNearby(target,radius);
 	}
 }
