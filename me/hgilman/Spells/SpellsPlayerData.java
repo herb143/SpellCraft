@@ -25,6 +25,7 @@ public class SpellsPlayerData {
 
 	public SpellBook getSpellBook() { return spellBook; }
 	public LivingEntity getTarget() { return currentTarget; }
+	public boolean hasTarget() { if(currentTarget==null) { return false; } else { return true; } }
 	public SpellsInfoLabel getInfoLabel() { return infoLabel; }
 	public boolean isClickToCast() { return clickToCast; }
 	

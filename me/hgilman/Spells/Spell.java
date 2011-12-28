@@ -91,13 +91,20 @@ public class Spell {
 	{
 		return abilityFormat(false);
 	}
-	
 	public String abilityFormat(boolean withParentheses)
+	{
+		return abilityFormat(withParentheses,ChatColor.DARK_RED,ChatColor.DARK_GREEN);
+	}
+	public String abilityFormat(ChatColor colorFalse,ChatColor colorTrue)
+	{
+		return abilityFormat(false,colorFalse,colorTrue);
+	}
+	public String abilityFormat(boolean withParentheses,ChatColor colorFalse,ChatColor colorTrue)
 	{
 		String formattedName = "";
 		if(hasRequiredItems())
 		{
-			formattedName = formattedName + ChatColor.DARK_GREEN;
+			formattedName = formattedName + colorTrue;
 			if(withParentheses) { formattedName = formattedName + "("; }
 			formattedName = formattedName + spellName;
 			if(withParentheses) { formattedName = formattedName + ")"; }
@@ -106,7 +113,7 @@ public class Spell {
 		}
 		else
 		{
-			formattedName = formattedName + ChatColor.DARK_RED;
+			formattedName = formattedName + colorFalse;
 			if(withParentheses) { formattedName = formattedName + "("; }
 			formattedName = formattedName + spellName;
 			if(withParentheses) { formattedName = formattedName + ")"; }

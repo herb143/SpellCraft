@@ -13,7 +13,6 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	private Player player;
 	private static Spells plugin;
-	SpellsPlayerData playerData;
 	
 	String printLabel(LivingEntity target)
 	{
@@ -31,7 +30,7 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	private String sClickToCast()
 	{
-		if(playerData.isClickToCast())
+		if(plugin.getPlayerData(player).isClickToCast())
 		{
 			return ChatColor.GREEN + "enabled" + ChatColor.WHITE;
 		}
@@ -44,12 +43,11 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	SpellsInfoLabel(Spells iplugin, Player iplayer)
 	{
-		super("Current Target: ");
+		super("Loading info from Spells v2.0 database...");
 		plugin = iplugin;
 		player = iplayer;
 		this.setAlign(WidgetAnchor.BOTTOM_RIGHT); //Align the text against the top right corner of the Label
 		this.setAnchor(WidgetAnchor.BOTTOM_RIGHT); //Align the Label against the top right corner of the screen.
-		playerData = plugin.getPlayerData(player); // Watch out, this might cause an error.
 		
 		this.setDirty(true);
 		((SpoutPlayer)player).getMainScreen().attachWidget(plugin,this);
@@ -57,10 +55,11 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	public void onTick()
 	{
-		LivingEntity target;
+		SpellsPlayerData playerData = plugin.getPlayerData(player);
+		
+		LivingEntity target = playerData.getTarget();
 		if(playerData.getTarget() != null)
 		{
-			target = playerData.getTarget();
 			if(getDistance(player.getLocation(), target.getLocation()) > 30) // The player is too far away from their target.
 			{
 				playerData.setTarget(null);
@@ -70,10 +69,9 @@ public class SpellsInfoLabel extends GenericLabel {
 				playerData.setTarget(null);
 			}
 		}
-		else { target = null; }
 
 		
-		this.setText("Current Target: " + printLabel(target) + "\nCurrent Spell: " + playerData.getSpellBook().getCurrentSpell().abilityFormat() + "\nClickToCast " + sClickToCast()).setDirty(true);
+		this.setText("Target: " + printLabel(target) + "\nSpell: " + playerData.getSpellBook().getCurrentSpell().abilityFormat(ChatColor.RED,ChatColor.GREEN) + "\nClickToCast " + sClickToCast()).setDirty(true);
 		
 		if(new SpoutItemStack(player.getItemInHand()).isCustomItem())
 		{

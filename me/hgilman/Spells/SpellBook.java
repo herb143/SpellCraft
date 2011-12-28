@@ -48,8 +48,6 @@ public class SpellBook {
 	{
 		if (index!=spellRegistry.size()-1) {index++;} // If we're not on the last one, advance.
 		else { index = 0; } // Or go back to start.
-
-		player.sendMessage("Selected spell: " + getCurrentSpell().abilityFormat()); // tell us what our current spell is now.
 	}
 	
 	public Spell getSpell(String spellName)
