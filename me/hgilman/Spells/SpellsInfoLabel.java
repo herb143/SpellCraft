@@ -57,9 +57,10 @@ public class SpellsInfoLabel extends GenericLabel {
 	
 	public void onTick()
 	{
-		LivingEntity target = playerData.getTarget();
-		if(target != null)
+		LivingEntity target;
+		if(playerData.getTarget() != null)
 		{
+			target = playerData.getTarget();
 			if(getDistance(player.getLocation(), target.getLocation()) > 30) // The player is too far away from their target.
 			{
 				playerData.setTarget(null);
@@ -69,6 +70,7 @@ public class SpellsInfoLabel extends GenericLabel {
 				playerData.setTarget(null);
 			}
 		}
+		else { target = null; }
 
 		
 		this.setText("Current Target: " + printLabel(target) + "\nCurrent Spell: " + playerData.getSpellBook().getCurrentSpell().abilityFormat() + "\nClickToCast " + sClickToCast()).setDirty(true);
