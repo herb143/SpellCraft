@@ -1,9 +1,11 @@
 package org.spellcraft;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
@@ -14,10 +16,12 @@ import org.getspout.spoutapi.inventory.SpoutShapedRecipe;
 import org.getspout.spoutapi.keyboard.Keyboard;
 import org.getspout.spoutapi.material.MaterialData;
 import org.getspout.spoutapi.plugin.SpoutPlugin;
+import org.spellcraft.castable.Spell;
 import org.spellcraft.executor.SpellCommandExecutor;
 import org.spellcraft.executor.SpellsKeyBindingExecutor;
 import org.spellcraft.item.Scepter;
 import org.spellcraft.listener.ScPlayerListener;
+import org.spellcraft.plugin.SpellCraftPlugin;
 
 public class SpellCraft extends SpoutPlugin {
 
@@ -66,16 +70,16 @@ public class SpellCraft extends SpoutPlugin {
 		log.info("Spellcraft loaded."); // We've made it this far...
 	}
 
-	public void registerSpell(Class<?> spellClass)
+	
+	public void registerSpell(Class<?> spellClass,SpellCraftPlugin plugin)
 	{
 		try {
 			if (Class.forName("org.spellcraft.castable.Spell").isAssignableFrom(spellClass))
 			{
 				masterSpellList.add(spellClass);
-				log.info("YES");
+				log.info("SpellCraft added " + spellClass.getSimpleName()  + " from " + plugin.getName() + ".");
 			}
 		} catch (ClassNotFoundException e) {
-			log.info("NO");
 			e.printStackTrace();
 		}
 	}

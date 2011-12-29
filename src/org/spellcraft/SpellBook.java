@@ -42,7 +42,6 @@ public class SpellBook {
 			if(newSpell != null)
 			{
 			registerSpell(newSpell);
-			player.sendMessage("Spell " + newSpell.getName() + " loaded.");
 			}
 			
 		}
