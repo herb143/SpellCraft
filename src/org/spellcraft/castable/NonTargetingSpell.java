@@ -14,7 +14,7 @@ public abstract class NonTargetingSpell extends AbstractSpell {
 	{
 		super(playerinstance, instance, name, desc, items);
 	}
-
+	
 	@Override
 	public void callSpell()
 	{
