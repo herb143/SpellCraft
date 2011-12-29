@@ -6,6 +6,7 @@ TODO:
     -- YOU BUILD THE SPELLS
     -- Spell idea: sniperfire. fires an arrow with 100% accuracy.
     -- javadocs
+    -- make the scepter a tool, this might fix the player holding it a weird way
 
 KNOWN BUGS:
     -- The scepters aren't supposed to stack (Category: Spout Limitations)
