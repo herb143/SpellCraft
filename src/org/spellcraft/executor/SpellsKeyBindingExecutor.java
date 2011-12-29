@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import org.bukkit.Material;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -14,21 +15,23 @@ import org.getspout.spoutapi.gui.ScreenType;
 import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.keyboard.BindingExecutionDelegate;
 import org.getspout.spoutapi.player.SpoutPlayer;
+import org.spellcraft.PlayerData;
 import org.spellcraft.SpellCraft;
 
 public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
-	
+
 	private static SpellCraft plugin;
-	
+
 	public SpellsKeyBindingExecutor(SpellCraft instance)
 	{
 		plugin = instance;
 	}
-	
-	
+
+
 	@Override
 	public void keyPressed(KeyBindingEvent event) {
 		SpoutPlayer player = event.getPlayer();
+		PlayerData playerData = plugin.getPlayerData(player);
 
 		if (player.getActiveScreen() == ScreenType.GAME_SCREEN && new SpoutItemStack(player.getItemInHand()).isCustomItem())
 		{
@@ -36,33 +39,33 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 			if (event.getBinding().getId() == "CAST_SPELL")
 			{
 
-				plugin.getPlayerData(player).getSpellBook().getCurrentSpell().callSpell();
+				playerData.getSpellBook().getCurrentSpell().callSpell();
 			}
 
 			if (event.getBinding().getId() == "TOGGLE_CLICK_TO_CAST")
 			{
-				if (plugin.getPlayerData(player).isClickToCast())
+				if (playerData.isClickToCast())
 				{
-					plugin.getPlayerData(player).setClickToCast(false); // Toggle
+					playerData.setClickToCast(false); // Toggle
 				}
 				else
 				{
-					plugin.getPlayerData(player).setClickToCast(true);
+					playerData.setClickToCast(true);
 				}
 			}
 
 			else if (event.getBinding().getId() == "SCROLL_SPELLS")
 			{
 
-				plugin.getPlayerData(player).getSpellBook().nextSpell();
+				playerData.getSpellBook().nextSpell();
 			}
 			else if (event.getBinding().getId() == "TARGET")
 			{
 				int targetRange = 15;
-				
+
 				List<Entity> nearbyEntities = player.getNearbyEntities(targetRange*2,targetRange*2,targetRange*2);
 				ArrayList<LivingEntity> livingEntities = new ArrayList<LivingEntity>();
-				
+
 				for (Entity entity : nearbyEntities)
 				{
 					if (entity instanceof LivingEntity)
@@ -70,8 +73,8 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 						livingEntities.add((LivingEntity) entity);
 					}
 				}
+				LivingEntity targetCandidate = null;
 				BlockIterator blockIterator = new BlockIterator(player, targetRange); // Loop through Player's line of sight.
-				boolean broken = false;
 				while (blockIterator.hasNext())
 				{
 					Block block = blockIterator.next();
@@ -87,26 +90,36 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 						Double entityZ = entityLocation.getZ();
 						if ((blockX-.75 <= entityX && entityX <= blockX+1.75) && (blockZ-.75 <= entityZ && entityZ <= blockZ+1.75) && (blockY-1 <= entityY && entityY <= blockY+2.5))
 						{
-							plugin.getPlayerData(player).setTarget(entity); // It's close enough. Thanks to Dirtystarfish for the approximation code above.
-							broken = true;
-							break;
+							targetCandidate = entity; // It's close enough. Thanks to Dirtystarfish for the approximation code above.
 						}
 					}
-					if(broken) { break; }
+					if(targetCandidate != null) { break; }
 				}
-				if(!broken) // We didn't find anything
+				if(targetCandidate == null) // We didn't find anything
 				{
-					plugin.getPlayerData(player).setTarget(null);
+					playerData.setTarget(null);
+				}
+				else
+				{
+					Block targetBlock = player.getTargetBlock(null,101);
+					if(targetBlock.getType() != Material.AIR && getDistance(targetBlock.getLocation(),player.getLocation()) < getDistance(targetCandidate.getLocation(),player.getLocation()))
+					{
+						playerData.setTarget(null); // There is a non-air block in between the player and their target.
+					}
+					else
+					{
+						playerData.setTarget(targetCandidate);
+					}
 				}
 
 			}
 			else if(event.getBinding().getId() == "SELF_TARGET")
 			{
-				plugin.getPlayerData(player).setTarget((LivingEntity)player);
+				playerData.setTarget((LivingEntity)player);
 			}
 			else if(event.getBinding().getId() == "UNLOCK_TARGET")
 			{
-				plugin.getPlayerData(player).setTarget(null);
+				playerData.setTarget(null);
 			}
 
 		}
@@ -118,5 +131,17 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 	{
 		// Do nothing
 	}
-	
+
+	private double getDistance(Location locA, Location locB) // Our lovely distance formula.
+	{
+		double xdiff = locA.getX() - locB.getX();
+		double ydiff = locA.getZ() - locB.getZ();
+		double zdiff = locA.getY() - locB.getY();
+		double xdiffsq = xdiff * xdiff;
+		double ydiffsq = ydiff * ydiff;
+		double zdiffsq = zdiff * zdiff;
+		double xyzadd = xdiffsq + ydiffsq + zdiffsq;
+		return Math.sqrt(xyzadd);
+	}
+
 }
