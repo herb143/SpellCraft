@@ -6,7 +6,7 @@ import org.spellcraft.SpellCraft;
 public abstract class SpellCraftPlugin extends SpoutPlugin
 {
 	
-	public SpellCraft getSpellCraftPlugin()
+	public SpellCraft getSpellCraft()
 	{
 		return (SpellCraft) this.getSpoutServer().getPluginManager().getPlugin("SpellCraft");
 	}
