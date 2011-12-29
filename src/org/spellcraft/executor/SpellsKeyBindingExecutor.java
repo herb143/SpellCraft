@@ -121,7 +121,6 @@ public class SpellsKeyBindingExecutor implements BindingExecutionDelegate {
 			{
 				playerData.setTarget(null);
 			}
-
 		}
 	}
 
