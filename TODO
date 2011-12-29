@@ -5,6 +5,7 @@ TODO:
     -- Custom GUI for spellbook selection
     -- YOU BUILD THE SPELLS
     -- Spell idea: sniperfire. fires an arrow with 100% accuracy.
+    -- javadocs
 
 KNOWN BUGS:
     -- The scepters aren't supposed to stack (Category: Spout Limitations)
