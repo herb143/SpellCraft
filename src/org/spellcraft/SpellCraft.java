@@ -21,24 +21,56 @@ import org.spellcraft.executor.SpellsKeyBindingExecutor;
 import org.spellcraft.item.Scepter;
 import org.spellcraft.listener.ScPlayerListener;
 import org.spellcraft.plugin.SpellCraftPlugin;
-
+/**
+ * Represents the SpellCraft spell manager
+ * @author hgilman
+ *
+ */
 public class SpellCraft extends SpoutPlugin {
-
+	/**
+	 * The custom "magic wand" item
+	 */
 	public static Scepter goldenScepter;
 	private final SpellCommandExecutor spellCommandExecutor = new SpellCommandExecutor(this);
 	private final ScPlayerListener playerListener = new ScPlayerListener(this);
 	private final SpellsKeyBindingExecutor bindingExecutor = new SpellsKeyBindingExecutor(this);
 	private Logger log = Logger.getLogger("Minecraft");
+
+
+	/**
+	 * 
+	 * @return the Logger used by this plugin
+	 */
 	public Logger getSpellCraftLogger() { return log; }
-	
+
 	private static ArrayList<Class<?>> masterSpellList = new ArrayList<Class<?>>();
+	/**
+	 * 
+	 * @return the ArrayList of Spell classes used by this plugin
+	 */
 	public ArrayList<Class<?>> getSpellList() { return masterSpellList; }
 
 	private static HashMap<String, PlayerData> playerData = new HashMap<String, PlayerData>();
+	/**
+	 * 
+	 * @param player The player to retrieve playerData for.
+	 * @return The playerData object for the given player
+	 */
 	public PlayerData getPlayerData(Player player) { return playerData.get(player.getName()); }
+	/**
+	 * 
+	 * @param player The player to delete playerData for.
+	 */
 	public void deletePlayerData(Player player) { playerData.remove(player.getName()); }
+	/**
+	 * 
+	 * @param player The player to instantiate a new playerData class for
+	 */
 	public void newPlayerData(Player player) { playerData.put(player.getName(), new PlayerData(this,player)); }
 
+	/**
+	 * Called by the pluginManager
+	 */
 	public void onEnable()
 	{
 		log.info("SpellCraft loading...");
@@ -69,7 +101,11 @@ public class SpellCraft extends SpoutPlugin {
 		log.info("Spellcraft loaded."); // We've made it this far...
 	}
 
-	
+	/**
+	 * Used to add a new spell to the spell registry.
+	 * @param spellClass The class to add
+	 * @param plugin The plugin that created the class
+	 */
 	public void registerSpell(Class<?> spellClass,SpellCraftPlugin plugin)
 	{
 		try {
@@ -83,6 +119,9 @@ public class SpellCraft extends SpoutPlugin {
 		}
 	}
 
+	/**
+	 * Called by the pluginManager.
+	 */
 	public void onDisable()
 
 	{
